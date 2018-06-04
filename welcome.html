@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<title>Clippy</title>
+	<link rel="icon" type="image/png" href="assets/webnote.png">
+	<link rel="stylesheet" type="text/css" href="../css/welcome.css">
+</head>
+<body>
+	<h1>Welcome to Clippy</h1>
+	<div>
+		<span>New User</span>
+		<span><button onclick="register();">Register</button></span>
+	</div>
+	<div>
+	<span>Existing user</span>	
+	<span><button onclick="login();">Login</button></span>	
+	</div>
+
+<script>
+
+	function register(){
+		window.location = "register.php";
+	}
+
+	function login(){
+		window.location = "login.php";
+	}
+
+</script>	
+
+</body>
+</html>
