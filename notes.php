@@ -23,9 +23,16 @@ $_SESSION['message']="";
 <body>
 	<h1>Notes | Clippy</h1>
 	<button onclick="home()">Home</button>
-	<button>Add notes</button>
+	<button onclick="newNote()">Add notes</button>
 	<button onclick="logout()">Logout</button>
+	<div id="notesInput">
+		<input id="titleInput" type="text" name="title">
+		<input id="noteAreaInput" type="text" name="noteArea">
+	</div>
+	<div id="notesRegion">
+	</div>
 <script src="functions.js"></script>	
+<script src="notes.js"></script>
 </body>
 </html>
 
