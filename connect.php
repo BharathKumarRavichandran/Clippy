@@ -7,7 +7,5 @@ define ('DB_NAME','clippy');
 
 $conn = new mysqli(DB_HOST,DB_USER,DB_PASSWORD);
 
-include("createDb.php");
-
 ?>
 
