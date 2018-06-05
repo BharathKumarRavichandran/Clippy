@@ -1,5 +1,6 @@
 var k=0;
 var task=0;
+var currentTasks=0;
 
 document.getElementById("taskInput").addEventListener("keyup",function(event){
 
@@ -12,6 +13,7 @@ document.getElementById("taskInput").addEventListener("keyup",function(event){
 
 function newTask(){
 	task++;
+	currentTasks++;
 	createBox();
 }
 
@@ -22,6 +24,7 @@ function createBox(){
 	var checkbox = document.createElement("input");
 	var taskSpan = document.createElement("span");
 	var starSpan = document.createElement("span");
+	var editSpan = document.createElement("span");
 	var delSpan = document.createElement("span");
 
 	//create text nodes if there are any
@@ -35,6 +38,7 @@ function createBox(){
 	divBox.appendChild(checkboxSpan);
 	divBox.appendChild(taskSpan);
 	divBox.appendChild(starSpan);
+	divBox.appendChild(editSpan);
 	divBox.appendChild(delSpan);
 	document.getElementById("taskRegion").appendChild(divBox);
 
@@ -43,10 +47,12 @@ function createBox(){
 	checkbox.setAttribute("id","taskStatus"+task);
 	taskSpan.setAttribute("id","taskText"+task);
 	starSpan.setAttribute("id","star"+task);
+	editSpan.setAttribute("id","edit"+task);
 	delSpan.setAttribute("id","del"+task);
 
 	//Setting classes for elements
 	starSpan.setAttribute("class","fa fa-star");
+	editSpan.setAttribute("class","fa fa-edit");
 	delSpan.setAttribute("class","fa fa-trash-o");
 
 	//Setting other attributes
@@ -54,6 +60,7 @@ function createBox(){
 	checkbox.setAttribute("name","taskStatus");
 	checkbox.setAttribute("onclick","checkboxClick(this)");
 	starSpan.setAttribute("onclick","starClick(this)");
+	editSpan.setAttribute("onclick","editClick(this)");
 	delSpan.setAttribute("onclick","delClick(this)");
 
 	document.getElementById("taskInput").value="";
@@ -83,9 +90,25 @@ function starClick(taskStar){
 
 }
 
+function editClick(edit){
+
+	k=edit.getAttribute("id")[4];
+
+	if(document.getElementById("edit"+k).getAttribute("class")=="fa fa-edit"){
+		document.getElementById("taskText"+k).setAttribute("contentEditable",true);
+		document.getElementById("edit"+k).setAttribute("class","fa fa-check-circle");
+	}
+	else{
+		document.getElementById("taskText"+k).setAttribute("contentEditable",false);
+		document.getElementById("edit"+k).setAttribute("class","fa fa-edit");
+	}	
+
+}
+
 function delClick(del){
 
 	k=del.getAttribute("id")[3];
-
 	document.getElementById("taskBox"+k).remove();
+	currentTasks--;
+
 }
