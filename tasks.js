@@ -8,7 +8,6 @@ document.getElementById("taskInput").addEventListener("keyup",function(event){
 		newTask();
 	}
 
-
 },false);
 
 function newTask(){
@@ -27,7 +26,7 @@ function createBox(){
 	var editSpan = document.createElement("span");
 	var delSpan = document.createElement("span");
 
-	//create text nodes if there are any
+	//create text nodes for the above elements
 	var taskText = document.createTextNode(document.getElementById("taskInput").value);
 
 	//Appending textnodes
@@ -42,7 +41,7 @@ function createBox(){
 	divBox.appendChild(delSpan);
 	document.getElementById("taskRegion").appendChild(divBox);
 
-	//Setting id's for elements
+	//Setting id for elements
 	divBox.setAttribute("id","taskBox"+task);
 	checkbox.setAttribute("id","taskStatus"+task);
 	taskSpan.setAttribute("id","taskText"+task);
