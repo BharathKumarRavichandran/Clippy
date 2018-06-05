@@ -22,6 +22,7 @@ function createBox(){
 	var checkbox = document.createElement("input");
 	var taskSpan = document.createElement("span");
 	var starSpan = document.createElement("span");
+	var delSpan = document.createElement("span");
 
 	//create text nodes if there are any
 	var taskText = document.createTextNode(document.getElementById("taskInput").value);
@@ -34,6 +35,7 @@ function createBox(){
 	divBox.appendChild(checkboxSpan);
 	divBox.appendChild(taskSpan);
 	divBox.appendChild(starSpan);
+	divBox.appendChild(delSpan);
 	document.getElementById("taskRegion").appendChild(divBox);
 
 	//Setting id's for elements
@@ -41,15 +43,18 @@ function createBox(){
 	checkbox.setAttribute("id","taskStatus"+task);
 	taskSpan.setAttribute("id","taskText"+task);
 	starSpan.setAttribute("id","star"+task);
+	delSpan.setAttribute("id","del"+task);
 
 	//Setting classes for elements
 	starSpan.setAttribute("class","fa fa-star");
+	delSpan.setAttribute("class","fa fa-trash-o");
 
 	//Setting other attributes
 	checkbox.setAttribute("type","checkbox");
 	checkbox.setAttribute("name","taskStatus");
 	checkbox.setAttribute("onclick","checkboxClick(this)");
 	starSpan.setAttribute("onclick","starClick(this)");
+	delSpan.setAttribute("onclick","delClick(this)");
 
 	document.getElementById("taskInput").value="";
 
@@ -76,4 +81,11 @@ function starClick(taskStar){
 		taskStar.classList.add("checked");
 	}
 
+}
+
+function delClick(del){
+
+	k=del.getAttribute("id")[3];
+
+	document.getElementById("taskBox"+k).remove();
 }
