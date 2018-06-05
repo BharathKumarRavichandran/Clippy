@@ -13,6 +13,8 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
 	$password = md5($_POST['password']);
 
+	include("createDb.php");
+
 	$sql = "SELECT * FROM user WHERE username='".$username."';";
 	$result = $conn->query($sql);
 
@@ -42,7 +44,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 	<meta name="viewport" content="width=device-width,initial-scale=1.0">
 	<title>Login | Clippy</title>
 	<link rel="icon" type="image/png" href="assets/webnote.png">
-	<link rel="stylesheet" type="text/css" href="../css/login.css">
+	<link rel="stylesheet" type="text/css" href="login.css">
 </head>
 <body>
 	<h1>Clippy</h1>

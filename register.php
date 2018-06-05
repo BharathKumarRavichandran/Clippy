@@ -19,6 +19,8 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
         $password = md5($_POST['password']); //md5 hash password for security
 
+        include("createDb.php");
+
         //set session variables
         $_SESSION['username'] = $username; 
         $_SESSION['email'] = $email;
@@ -53,7 +55,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 	<meta name="viewport" content="width=device-width,initial-scale=1.0">
 	<title>Sign Up | Clippy</title>
 	<link rel="icon" type="image/png" href="assets/webnote.png">
-	<link rel="stylesheet" type="text/css" href="../css/register.css">
+	<link rel="stylesheet" type="text/css" href="register.css">
 </head>
 <body>
 	<h1>Clippy</h1>
