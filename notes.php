@@ -26,8 +26,8 @@ $_SESSION['message']="";
 	<button onclick="newNote()">Add notes</button>
 	<button onclick="logout()">Logout</button>
 	<div id="notesInput">
-		<input id="titleInput" type="text" name="title">
-		<input id="noteAreaInput" type="text" name="noteArea">
+		<input id="titleInput" type="text" name="title" placeholder="Title">
+		<input id="noteAreaInput" type="text" name="noteArea" placeholder="Notes">
 	</div>
 	<div id="notesRegion">
 	</div>

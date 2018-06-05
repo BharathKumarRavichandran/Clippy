@@ -29,7 +29,7 @@ $_SESSION['message']="";
 		<button onclick="logout()">Logout</button>
 	</div>
 	<div>
-		<input id="taskInput" type="text" name="taskInput">
+		<input id="taskInput" type="text" name="taskInput" placeholder="Task">
 	</div>
 	<div id="taskRegion">	
 	</div>	

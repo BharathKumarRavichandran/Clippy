@@ -59,6 +59,8 @@ function createNoteBox(){
 
 	document.getElementById("titleInput").value="";
 	document.getElementById("noteAreaInput").value="";
+	document.getElementById("titleInput").setAttribute("placeholder","Title");
+	document.getElementById("noteAreaInput").setAttribute("placeholder","Notes");
 }
 
 function editClick(edit){

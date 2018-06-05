@@ -63,6 +63,7 @@ function createBox(){
 	delSpan.setAttribute("onclick","delClick(this)");
 
 	document.getElementById("taskInput").value="";
+	document.getElementById("taskInput").setAttribute("placeholder","Task");
 
 }
 
