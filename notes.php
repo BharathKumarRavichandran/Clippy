@@ -22,6 +22,7 @@ $_SESSION['message']="";
 </head>
 <body>
 	<h1>Notes | Clippy</h1>
+	<button onclick="home()">Home</button>
 	<button>Add notes</button>
 	<button onclick="logout()">Logout</button>
 <script src="functions.js"></script>	
