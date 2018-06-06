@@ -62,6 +62,9 @@ function createBox(){
 	editSpan.setAttribute("onclick","editClick(this)");
 	delSpan.setAttribute("onclick","delClick(this)");
 
+	//Function call to save task data in database
+	addTaskDb();
+
 	document.getElementById("taskInput").value="";
 	document.getElementById("taskInput").setAttribute("placeholder","Task");
 
@@ -77,9 +80,13 @@ function checkboxClick(button){
 	else{
 		document.getElementById("taskBox"+k).style.textDecoration ="none";
 	}
+
+	editTaskDb(k);
 }
 
 function starClick(taskStar){
+
+	k=taskStar.getAttribute("id")[4];
 
 	if(taskStar.classList.contains("checked")){
 		taskStar.classList.remove("checked");
@@ -88,6 +95,7 @@ function starClick(taskStar){
 		taskStar.classList.add("checked");
 	}
 
+	editTaskDb(k);
 }
 
 function editClick(edit){
@@ -96,19 +104,96 @@ function editClick(edit){
 
 	if(document.getElementById("edit"+k).getAttribute("class")=="fa fa-edit"){
 		document.getElementById("taskText"+k).setAttribute("contentEditable",true);
-		document.getElementById("edit"+k).setAttribute("class","fa fa-check-circle");
+		document.getElementById("edit"+k).setAttribute("class","fa fa-check-circle");	
 	}
 	else{
 		document.getElementById("taskText"+k).setAttribute("contentEditable",false);
 		document.getElementById("edit"+k).setAttribute("class","fa fa-edit");
+		editTaskDb(k);
 	}	
+
+}
+
+function editTaskDb(k){
+
+	if (window.XMLHttpRequest) {
+  			xmlhttp = new XMLHttpRequest();
+	 } 
+	 else{
+	   	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+
+	var url="tasks.php";
+	var taskNumber = k;
+	var checked;
+	if(document.getElementById("taskStatus"+k).checked==true){
+		checked = "yes";
+	}
+	else{
+		checked = "no";
+	}
+	var taskText = document.getElementById("taskText"+k).innerHTML;
+	var starred;
+	if(document.getElementById("star"+k).classList.contains("checked")){
+		starred = "yes";
+	}
+	else{
+		starred = "no";
+	}
+	var purpose = "edit";
+	var params = "taskNumber="+taskNumber+"&checked="+checked+"&taskText="+taskText+"&starred="+starred+"&purpose="+purpose;
+		
+	xmlhttp.open('POST',url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
 
 }
 
 function delClick(del){
 
 	k=del.getAttribute("id")[3];
+
+	if (window.XMLHttpRequest) {
+  		xmlhttp = new XMLHttpRequest();
+	} 
+	else{
+	   	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+
+	var url="tasks.php";
+	var taskNumber = k;
+	var purpose = "delete";
+	var params = "taskNumber="+taskNumber+"&purpose="+purpose;
+		
+	xmlhttp.open('POST',url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
+
 	document.getElementById("taskBox"+k).remove();
 	currentTasks--;
+
+
+}
+
+function addTaskDb(){
+
+	if (window.XMLHttpRequest) {
+  		xmlhttp = new XMLHttpRequest();
+ 	} 
+ 	else{
+    	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+
+	var url="tasks.php";
+	var taskNumber = task;
+	var checked = "no";
+	var taskText = document.getElementById("taskInput").value;
+	var starred = "no";
+	var purpose = "add";
+	var params = "taskNumber="+taskNumber+"&checked="+checked+"&taskText="+taskText+"&starred="+starred+"&purpose="+purpose;
+	
+	xmlhttp.open('POST',url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
 
 }

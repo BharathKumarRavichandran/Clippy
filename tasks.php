@@ -1,14 +1,55 @@
 <?php
 
 session_start();
+$_SESSION['message']="";
 include("connect.php");
 
 if(!isset($_SESSION["username"])){
 	header('Location: welcome.html');
 	exit();
 }
+include("createDataTable.php");
 
-$_SESSION['message']="";
+$username = $_SESSION["username"];
+$tablename = $username."tasks";
+
+if($_SERVER['REQUEST_METHOD']=="POST"){
+
+	if($_POST["purpose"]=="add"){
+
+		$taskNumber = $_POST['taskNumber'];
+		$checked = $_POST['checked'];
+		$taskText = $_POST['taskText'];
+		$starred = $_POST['starred'];
+
+		$sql = "INSERT INTO $tablename(TaskNumber,Checked,TaskText,Starred) "."VALUES ('$taskNumber','$checked','$taskText','$starred')";
+		$conn->query($sql);
+
+	}
+
+	else if($_POST["purpose"]=="edit"){
+
+		$taskNumber = $_POST['taskNumber'];
+		$checked = $_POST['checked'];
+		$taskText = $_POST['taskText'];
+		$starred = $_POST['starred'];
+
+		$sql = "UPDATE $tablename SET Checked='$checked', TaskText='$taskText', Starred='$starred' WHERE TaskNumber = $taskNumber;";
+		$conn->query($sql);
+
+	}
+
+	else if($_POST["purpose"]=="delete"){
+
+		$taskNumber = $_POST['taskNumber'];
+
+		$sql = "DELETE FROM $tablename WHERE TaskNumber = $taskNumber;";
+		$conn->query($sql);
+
+	}
+
+
+}
 
 ?>
 
