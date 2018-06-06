@@ -57,6 +57,8 @@ function createNoteBox(){
 	editSpan.setAttribute("onclick","editClick(this)");
 	delSpan.setAttribute("onclick","delClick(this)");
 
+	addNoteDb();
+
 	document.getElementById("titleInput").value="";
 	document.getElementById("noteAreaInput").value="";
 	document.getElementById("titleInput").setAttribute("placeholder","Title");
@@ -76,14 +78,76 @@ function editClick(edit){
 		document.getElementById("title"+k).setAttribute("contentEditable",false);
 		document.getElementById("noteTextArea"+k).setAttribute("contentEditable",false);
 		document.getElementById("edit"+k).setAttribute("class","fa fa-edit");
+		editNoteDb(k);
 	}	
+
+}
+
+function editNoteDb(k){
+
+	if (window.XMLHttpRequest) {
+  			xmlhttp = new XMLHttpRequest();
+	 } 
+	 else{
+	   	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+
+	var url="notes.php";
+	var noteNumber = k;
+	var titleText = document.getElementById("title"+k).innerHTML;
+	var noteText = document.getElementById("noteTextArea"+k).innerHTML;
+	var purpose = "edit";
+	var params = "noteNumber="+noteNumber+"&titleText="+titleText+"&noteText="+noteText+"&purpose="+purpose;
+		
+	xmlhttp.open('POST',url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
 
 }
 
 function delClick(del){
 
 	k=del.getAttribute("id")[3];
+
+	if (window.XMLHttpRequest) {
+  		xmlhttp = new XMLHttpRequest();
+	} 
+	else{
+	   	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+
+	var url="notes.php";
+	var noteNumber = k;
+	var purpose = "delete";
+	var params = "noteNumber="+noteNumber+"&purpose="+purpose;
+		
+	xmlhttp.open('POST',url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
+
 	document.getElementById("noteBox"+k).remove();
 	currentNotes--;
+
+}
+
+function addNoteDb(){
+
+	if (window.XMLHttpRequest) {
+  		xmlhttp = new XMLHttpRequest();
+ 	} 
+ 	else{
+    	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+
+	var url="notes.php";
+	var noteNumber = notes;
+	var titleText = document.getElementById("titleInput").value;
+	var noteText = document.getElementById("noteAreaInput").value;
+	var purpose = "add";
+	var params = "noteNumber="+noteNumber+"&titleText="+titleText+"&noteText="+noteText+"&purpose="+purpose;
+	
+	xmlhttp.open('POST',url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
 
 }
