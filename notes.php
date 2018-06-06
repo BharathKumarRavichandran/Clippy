@@ -10,6 +10,8 @@ if(!isset($_SESSION["username"])){
 
 $_SESSION['message']="";
 
+include("createDataTable.php");
+
 ?>
 
 <!DOCTYPE html>

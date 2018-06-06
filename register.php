@@ -25,6 +25,8 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         $_SESSION['username'] = $username; 
         $_SESSION['email'] = $email;
 
+        include("createDataTable.php");
+
         //insert user data into database
         $sql = "INSERT INTO user (username,email,password) "."VALUES ('$username','$email','$password')";
 

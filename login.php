@@ -24,6 +24,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 			if($row["password"]==$password){
 				$_SESSION["username"] = $username;
 				$_SESSION["email"] = $row["email"];
+				include("createDataTable.php");
 				header("location: menu.php");  
 			}
 			else{
