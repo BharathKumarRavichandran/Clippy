@@ -21,8 +21,10 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		$checked = $_POST['checked'];
 		$taskText = $_POST['taskText'];
 		$starred = $_POST['starred'];
+		$editTime = $_POST['editTime'];
+		$createTime = $_POST['createTime'];
 
-		$sql = "INSERT INTO $tablename(TaskNumber,Checked,TaskText,Starred) "."VALUES ('$taskNumber','$checked','$taskText','$starred')";
+		$sql = "INSERT INTO $tablename(TaskNumber,Checked,TaskText,Starred,EditTime,CreateTime) "."VALUES ('$taskNumber','$checked','$taskText','$starred','$editTime','$createTime');";
 		$conn->query($sql);
 
 	}
@@ -33,8 +35,9 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		$checked = $_POST['checked'];
 		$taskText = $_POST['taskText'];
 		$starred = $_POST['starred'];
+		$editTime = $_POST['editTime'];
 
-		$sql = "UPDATE $tablename SET Checked='$checked', TaskText='$taskText', Starred='$starred' WHERE TaskNumber = $taskNumber;";
+		$sql = "UPDATE $tablename SET Checked='$checked', TaskText='$taskText', Starred='$starred', EditTime='$editTime' WHERE TaskNumber = $taskNumber;";
 		$conn->query($sql);
 
 	}

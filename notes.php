@@ -21,8 +21,13 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		$noteNumber = $_POST['noteNumber'];
 		$titleText = $_POST['titleText'];
 		$noteText = $_POST['noteText'];
+		$editTime = $_POST['editTime'];
+		$createTime = $_POST['createTime'];
 
-		$sql = "INSERT INTO $tablename(NoteNumber,Title,NoteText) "."VALUES ('$noteNumber','$titleText','$noteText')";
+		$sql = "INSERT INTO $tablename(NoteNumber,Title,NoteText,EditTime,CreateTime) "."VALUES ('$noteNumber','$titleText','$noteText','$editTime','$createTime');";
+		$conn->query($sql);
+
+		$sql = "UPDATE user SET noteMaxCount='$noteNumber' WHERE username = '$username';";
 		$conn->query($sql);
 
 	}
@@ -32,8 +37,9 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		$noteNumber = $_POST['noteNumber'];
 		$titleText = $_POST['titleText'];
 		$noteText = $_POST['noteText'];
+		$editTime = $_POST['editTime'];
 
-		$sql = "UPDATE $tablename SET Title='$titleText', NoteText='$noteText' WHERE NoteNumber = $noteNumber;";
+		$sql = "UPDATE $tablename SET Title='$titleText', NoteText='$noteText', EditTime='$editTime' WHERE NoteNumber = $noteNumber;";
 		$conn->query($sql);
 
 	}
@@ -49,7 +55,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
 }
 
-
+include_once("getNoteData.php");
 ?>
 
 <!DOCTYPE html>
@@ -57,11 +63,13 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 <head>
 	<meta name="viewport" content="width=device-width,initial-scale=1.0">
 	<title>Notes | Clippy</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<link rel="icon" type="image/png" href="assets/webnote.png">
 	<link rel="stylesheet" type="text/css" href="notes.css">
 </head>
 <body>
 	<h1>Notes | Clippy</h1>
+	<div><?= $_SESSION['message'] ?></div>
 	<button onclick="home()">Home</button>
 	<button onclick="newNote()">Add notes</button>
 	<button onclick="logout()">Logout</button>
@@ -72,7 +80,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 	<div id="notesRegion">
 	</div>
 <script src="functions.js"></script>	
-<script src="notes.js"></script>
+<script type="text/javascript" src="notes.js">
+</script>
 </body>
 </html>
-
