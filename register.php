@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-include('connect.php');
+include_once('connect.php');
 $_SESSION['message']="";
 
 if($_SERVER["REQUEST_METHOD"]=="POST"){

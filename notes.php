@@ -2,7 +2,7 @@
 
 session_start();
 $_SESSION['message']="";
-include("connect.php");
+include_once("connect.php");
 
 if(!isset($_SESSION["username"])){
 	header('Location: welcome.html');
@@ -55,7 +55,6 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
 }
 
-include_once("getNoteData.php");
 ?>
 
 <!DOCTYPE html>
@@ -63,6 +62,7 @@ include_once("getNoteData.php");
 <head>
 	<meta name="viewport" content="width=device-width,initial-scale=1.0">
 	<title>Notes | Clippy</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<link rel="icon" type="image/png" href="assets/webnote.png">
 	<link rel="stylesheet" type="text/css" href="notes.css">
