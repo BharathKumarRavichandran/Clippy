@@ -51,7 +51,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		$sql = "DELETE FROM $tablename WHERE NoteNumber = $noteNumber;";
 		$conn->query($sql);
 
-	}
+	}	
 
 }
 
