@@ -172,5 +172,3 @@ function addNoteDb(){
 	xmlhttp.send(params);
 
 }
-
-getData();
