@@ -1,24 +1,64 @@
+var i=0;
 var k=0;
 var task=0;
-var currentTasks=0;
 
-document.getElementById("taskInput").addEventListener("keyup",function(event){
+if (window.XMLHttpRequest) {
+  	xmlhttp = new XMLHttpRequest();
+} 
+else{
+  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+}
 
-	if(event.keyCode==13){
+document.getElementById("taskInput").addEventListener("keyup",function(event){//Function to listen for enter keyup at taskInput
+
+	if(event.keyCode==13){//enter keyCode
 		newTask();
 	}
 
 },false);
 
-function newTask(){
-	task++;
-	currentTasks++;
-	createBox();
+function initialise(){//Function to get stored task data in database and to create task boxes
+	
+	var params="";
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){
+	    	var data = JSON.parse(this.responseText);			
+	    	for(i=0;i<data.length;i++){
+	    		task++;
+	    		createBox(data[i].TaskNumber,data[i].Checked,data[i].TaskText,data[i].Starred,data[i].EditTime,data[i].CreateTime);
+	    	}
+	    }
+	};
+	xmlhttp.open("POST","getTaskData.php",true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
+
 }
 
-function createBox(){
+function newTask(){//Function to collect current task data to call box creating and data storing function
+
+	task++;
 
 	var d = new Date();
+	var taskNumber = task;
+	var checked = "no";
+	var taskText = document.getElementById("taskInput").value;
+	var starred = "no";
+	var editTime = "Edited: "+d;
+	var createTime = "Created: "+d;
+
+	createBox(taskNumber,checked,taskText,starred,editTime,createTime);
+	
+	//Function call to save task data in database
+	addTaskDb(taskNumber,checked,taskText,starred,editTime,createTime);
+
+	document.getElementById("taskInput").value="";
+	document.getElementById("taskInput").setAttribute("placeholder","Task");
+
+}
+
+function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function to create all nodes and to add task box
 
 	var divBox = document.createElement("div");
 	var checkboxSpan = document.createElement("span");
@@ -31,9 +71,9 @@ function createBox(){
 	var createTimeDiv = document.createElement("div"); 
 
 	//create text nodes for the above elements
-	var taskText = document.createTextNode(document.getElementById("taskInput").value);
-	var editTimeText = document.createTextNode("Edited: "+d);
-	var createTimeText = document.createTextNode("Created :"+d);
+	var taskText = document.createTextNode(tText);
+	var editTimeText = document.createTextNode(tEditTime);
+	var createTimeText = document.createTextNode(tCreateTime);
 
 	//Appending textnodes
 	taskSpan.appendChild(taskText);
@@ -52,19 +92,32 @@ function createBox(){
 	document.getElementById("taskRegion").appendChild(divBox);
 
 	//Setting id for elements
-	divBox.setAttribute("id","taskBox"+task);
-	checkbox.setAttribute("id","taskStatus"+task);
-	taskSpan.setAttribute("id","taskText"+task);
-	starSpan.setAttribute("id","star"+task);
-	editSpan.setAttribute("id","edit"+task);
-	delSpan.setAttribute("id","del"+task);
-	editTimeDiv.setAttribute("id","editTime"+task);
-	createTimeDiv.setAttribute("id","createTime"+task);
+	divBox.setAttribute("id","taskBox"+k);
+	checkbox.setAttribute("id","taskStatus"+k);
+	taskSpan.setAttribute("id","taskText"+k);
+	starSpan.setAttribute("id","star"+k);
+	editSpan.setAttribute("id","edit"+k);
+	delSpan.setAttribute("id","del"+k);
+	editTimeDiv.setAttribute("id","editTime"+k);
+	createTimeDiv.setAttribute("id","createTime"+k);
 
 	//Setting classes for elements
 	starSpan.setAttribute("class","fa fa-star");
 	editSpan.setAttribute("class","fa fa-edit");
 	delSpan.setAttribute("class","fa fa-trash-o");
+
+	//Striking out if the checkbox is checked
+	if(tChecked=="yes"){
+		divBox.style.textDecoration ="line-through";
+	}
+	else{
+		divBox.style.textDecoration ="none";
+	}
+
+	//Adding stars if it is starred
+	if(tStarred=="yes"){
+		starSpan.classList.add("checked");
+	}
 
 	//Setting other attributes
 	checkbox.setAttribute("type","checkbox");
@@ -74,15 +127,9 @@ function createBox(){
 	editSpan.setAttribute("onclick","editClick(this)");
 	delSpan.setAttribute("onclick","delClick(this)");
 
-	//Function call to save task data in database
-	addTaskDb();
-
-	document.getElementById("taskInput").value="";
-	document.getElementById("taskInput").setAttribute("placeholder","Task");
-
 }
 
-function checkboxClick(button){
+function checkboxClick(button){//Function to respond to user's checkbox click
 	
 	k=button.getAttribute("id")[10];
 
@@ -96,7 +143,7 @@ function checkboxClick(button){
 	editTaskDb(k);
 }
 
-function starClick(taskStar){
+function starClick(taskStar){//Function to respond to user's star click
 
 	k=taskStar.getAttribute("id")[4];
 
@@ -110,7 +157,7 @@ function starClick(taskStar){
 	editTaskDb(k);
 }
 
-function editClick(edit){
+function editClick(edit){//Function that allows user to edit the contents of the task
 
 	k=edit.getAttribute("id")[4];
 
@@ -126,17 +173,10 @@ function editClick(edit){
 
 }
 
-function editTaskDb(k){
+function editTaskDb(k){//Function to update edited task data in database
 
 	var d = new Date();
 	document.getElementById("editTime"+k).innerHTML ="Edited: "+d;	
-
-	if (window.XMLHttpRequest) {
-  			xmlhttp = new XMLHttpRequest();
-	 } 
-	 else{
-	   	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	}
 
 	var url="tasks.php";
 	var taskNumber = k;
@@ -165,16 +205,9 @@ function editTaskDb(k){
 
 }
 
-function delClick(del){
+function delClick(del){//Function to delete a task
 
 	k=del.getAttribute("id")[3];
-
-	if (window.XMLHttpRequest) {
-  		xmlhttp = new XMLHttpRequest();
-	} 
-	else{
-	   	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	}
 
 	var url="tasks.php";
 	var taskNumber = k;
@@ -186,28 +219,12 @@ function delClick(del){
 	xmlhttp.send(params);
 
 	document.getElementById("taskBox"+k).remove();
-	currentTasks--;
-
 
 }
 
-function addTaskDb(){
+function addTaskDb(taskNumber,checked,taskText,starred,editTime,createTime){//Function to store user's newly created task data in database
 
-	if (window.XMLHttpRequest) {
-  		xmlhttp = new XMLHttpRequest();
- 	} 
- 	else{
-    	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-
-	var d = new Date();
 	var url="tasks.php";
-	var taskNumber = task;
-	var checked = "no";
-	var taskText = document.getElementById("taskInput").value;
-	var starred = "no";
-	var editTime = "Edited: "+d;
-	var createTime = "Created: "+d;
 	var purpose = "add";
 	var params = "taskNumber="+taskNumber+"&checked="+checked+"&taskText="+taskText+"&starred="+starred+"&editTime="+editTime+"&createTime="+createTime+"&purpose="+purpose;
 	
@@ -216,3 +233,5 @@ function addTaskDb(){
 	xmlhttp.send(params);
 
 }
+
+initialise();
