@@ -1,21 +1,48 @@
+var i=0;
 var k=0;
 var notes=0;
-var currentNotes=0;
-var noteData;
 
-document.getElementById("notesInput").addEventListener("keyup",function(event){
+if (window.XMLHttpRequest) {
+  		xmlhttp = new XMLHttpRequest();
+} 
+ else{
+  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+}
 
-	if(event.keyCode==13){
+document.getElementById("notesInput").addEventListener("keyup",function(event){//Function to listen for enter keyup at noteInput
+
+	if(event.keyCode==13){//enter keyCode
 		newNote();
 	}
 
 },false);
 
-function newNote(){
+function initialise(){//Function to get stored note data in database and to create note boxes
+
+	var params="";
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){
+	    	var data = JSON.parse(this.responseText);			
+	    	for(i=0;i<data.length;i++){
+	    		notes++;
+	    		createNoteBox(data[i].NoteNumber,data[i].Title,data[i].NoteText,data[i].EditTime,data[i].CreateTime);
+	    	}
+	    }
+	};
+	xmlhttp.open("POST","getNoteData.php",true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
+}
+
+function newNote(){//Function to collect current note data to call box creating and data storing function
+
+	var d = new Date();
+	var editTime = "Edited: "+d;
+	var createTime = "Created: "+d;
 	notes++;
-	currentNotes++;
-	createNoteBox(notes);
-	addNoteDb();
+	createNoteBox(notes,document.getElementById("titleInput").value,document.getElementById("noteAreaInput").value,editTime,createTime);
+	addNoteDb(notes,document.getElementById("titleInput").value,document.getElementById("noteAreaInput").value,editTime,createTime);
 
 	document.getElementById("titleInput").value="";
 	document.getElementById("noteAreaInput").value="";
@@ -23,24 +50,24 @@ function newNote(){
 	document.getElementById("noteAreaInput").setAttribute("placeholder","Notes");
 }
 
-function createNoteBox(k){
-
-	var d = new Date();
+function createNoteBox(k,nTitle,nText,nEditTime,nCreateTime){//Function to create all nodes and to add note box
 
 	var noteBoxDiv = document.createElement("div"); 
 	var titleDiv = document.createElement("div");
 	var noteTextDiv = document.createElement("div");
 	var buttonsDiv = document.createElement("div");
 	var editSpan = document.createElement("span");
+	var imgSpan = document.createElement("span");
+	var fileUploadInput = document.createElement("input");
 	var delSpan = document.createElement("span");
 	var editTimeDiv = document.createElement("div");
 	var createTimeDiv = document.createElement("div"); 
 
 	//create text nodes for the above elements
-	var titleText = document.createTextNode(document.getElementById("titleInput").value);
-	var noteAreaText = document.createTextNode(document.getElementById("noteAreaInput").value); 
-	var editTimeText = document.createTextNode("Edited: "+d);
-	var createTimeText = document.createTextNode("Created :"+d);
+	var titleText = document.createTextNode(nTitle);
+	var noteAreaText = document.createTextNode(nText); 
+	var editTimeText = document.createTextNode(nEditTime);
+	var createTimeText = document.createTextNode(nCreateTime);
 
 	//Appending textnodes
 	titleDiv.appendChild(titleText);
@@ -52,6 +79,8 @@ function createNoteBox(k){
 	noteBoxDiv.appendChild(titleDiv);
 	noteBoxDiv.appendChild(noteTextDiv);
 	buttonsDiv.appendChild(editSpan);
+	buttonsDiv.appendChild(imgSpan);
+	buttonsDiv.appendChild(fileUploadInput);
 	buttonsDiv.appendChild(delSpan);
 	noteBoxDiv.appendChild(buttonsDiv);
 	noteBoxDiv.appendChild(editTimeDiv);
@@ -64,6 +93,8 @@ function createNoteBox(k){
 	noteTextDiv.setAttribute("id","noteTextArea"+k);
 	buttonsDiv.setAttribute("id","buttons"+k);
 	editSpan.setAttribute("id","edit"+k);
+	imgSpan.setAttribute("id","imgUpload"+k);
+	fileUploadInput.setAttribute("id","fileUpload"+k);
 	delSpan.setAttribute("id","del"+k);
 	editTimeDiv.setAttribute("id","editTime"+k);
 	createTimeDiv.setAttribute("id","createTime"+k);
@@ -71,15 +102,20 @@ function createNoteBox(k){
 
 	//Setting classes for elements
 	editSpan.setAttribute("class","fa fa-edit");
+	imgSpan.setAttribute("class","fa fa-image");
 	delSpan.setAttribute("class","fa fa-trash-o");
 
 	//Setting other attributes
 	editSpan.setAttribute("onclick","editClick(this)");
+	imgSpan.setAttribute("onclick","imgUploadClick(this)");
+	fileUploadInput.setAttribute("type","file");
+	fileUploadInput.setAttribute("accept","image/*");
+	fileUploadInput.setAttribute("style","display:none");
 	delSpan.setAttribute("onclick","delClick(this)");
 
 }
 
-function editClick(edit){
+function editClick(edit){//Function that allows user to edit the contents of the note
 
 	k=edit.getAttribute("id")[4];
 
@@ -97,17 +133,10 @@ function editClick(edit){
 
 }
 
-function editNoteDb(k){
+function editNoteDb(k){//Function to update edited note data in database 
 
 	var d = new Date();
 	document.getElementById("editTime"+k).innerHTML ="Edited: "+d;	
-
-	if (window.XMLHttpRequest) {
-  			xmlhttp = new XMLHttpRequest();
-	 } 
-	else{
-	   	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	}
 
 	var url="notes.php";
 	var noteNumber = k;
@@ -123,16 +152,16 @@ function editNoteDb(k){
 
 }
 
-function delClick(del){
+function imgUploadClick(imgUp){
+
+	k=imgUp.getAttribute("id")[9];
+	document.getElementById("fileUpload"+k).click();
+
+}
+
+function delClick(del){//Function to delete a note
 
 	k=del.getAttribute("id")[3];
-
-	if (window.XMLHttpRequest) {
-  		xmlhttp = new XMLHttpRequest();
-	} 
-	else{
-	   	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	}
 
 	var url="notes.php";
 	var noteNumber = k;
@@ -144,26 +173,12 @@ function delClick(del){
 	xmlhttp.send(params);
 
 	document.getElementById("noteBox"+k).remove();
-	currentNotes--;
 
 }
 
-function addNoteDb(){
+function addNoteDb(noteNumber,titleText,noteText,editTime,createTime){//Function to store user's newly created note data in database
 
-	if (window.XMLHttpRequest) {
-  		xmlhttp = new XMLHttpRequest();
- 	} 
- 	else{
-    	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-
-	var d = new Date();
 	var url="notes.php";
-	var noteNumber = notes;
-	var titleText = document.getElementById("titleInput").value;
-	var noteText = document.getElementById("noteAreaInput").value;
-	var editTime = "Edited: "+d;
-	var createTime = "Created: "+d;
 	var purpose = "add";
 	var params = "noteNumber="+noteNumber+"&titleText="+titleText+"&noteText="+noteText+"&editTime="+editTime+"&createTime="+createTime+"&purpose="+purpose;
 	
@@ -172,3 +187,5 @@ function addNoteDb(){
 	xmlhttp.send(params);
 
 }
+
+initialise();
