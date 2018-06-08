@@ -126,8 +126,27 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 			width: 7vw;
 		}
 
+		.options{
+			margin-top: 10vh;
+		}
+
+		.text{
+        	font-family: 'Sofia';
+        	color: orange;
+        	font-size: 1.2em;
+        	margin-left: 40vw;
+        }
+
+        #signupb{
+			border-radius: 3px;
+			font-family: 'Sofia';
+			letter-spacing: 0.3em;
+			font-size: 1em;
+			width: 7vw;
+        }
+
 		#foot{
-			margin-top:26vh;
+			margin-top: 12vh;
 			color: white;
 			text-align: center;
 			font-size: 1.3em;
@@ -155,8 +174,19 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 		<div><input id="passIn" type="password" placeholder="Password" name="password" autocomplete="new-password" required /></div>
 	    <div><input id="submitIn" type="submit" value="Login" name="login"/></div>
     </form>
+    <div class="options">
+    	<span class="text">New User? Register here!</span>
+    	<span><button id="signupb" onclick="register()">Sign Up</button></span>
+    </div>
     <footer>
 		<p id="foot">Made with <span id="heart">&hearts;</span> by <a id="nameLink" href="https://BharathKumarRavichandran.github.io">Bharath Kumar Ravichandran</a></p>
 	</footer>
+<script>
+
+	function register(){
+		window.location = "register.php";
+	}
+
+</script>	
 </body>
 </html>
