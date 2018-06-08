@@ -265,7 +265,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 	<div class="sidenav" >
 		<a class="home sidenavlinks" onclick="home()">Home</a>
 		<a class="sidenavlinks active">Notes</a>
-		<a class="sidenavlinks" onclick="task()">to-do lists</a>
+		<a class="sidenavlinks" onclick="tasks()">to-do lists</a>
 		<a class="sidenavlinks" onclick="logout()">Logout</a>
 	</div>	
 	<div class="main title2"><h1>Notes</h1></div>
