@@ -56,19 +56,132 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 <head>
 	<meta name="viewport" content="width=device-width,initial-scale=1.0">
 	<title>Sign Up | Clippy</title>
+    <link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet'>
 	<link rel="icon" type="image/png" href="assets/webnote.png">
-	<link rel="stylesheet" type="text/css" href="register.css">
+    <style type="text/css">
+        
+        html,body{
+            margin: 0;
+            padding: 0;
+            background: #1A1A1D;
+            font-family: 'Sofia';
+        }
+
+        .title{
+            text-align: center;
+            background: #111111;
+            color: yellow;
+            font-family: 'Sofia';
+            letter-spacing: 0.4em;
+            font-size: 4em;
+            padding: 5px;
+        }
+
+        .tagline{
+            text-align: center;
+            color: yellow;
+            font-family: 'Sofia';
+            letter-spacing: 0.2em;
+            font-size: 2em;
+            padding: 5px;
+            margin-bottom: 2%;
+        }
+
+        #registerTitle{
+            text-align: center;
+            color: orange;
+            font-family: 'Sofia';
+            letter-spacing: 0.4em;
+            font-size: 2.5em;
+            padding: 5px;
+            padding-bottom: 0px;
+        }
+
+        #errMsg{
+            background: red;
+            margin-top: -10px;
+            letter-spacing: 0.1em;
+            font-size: 1.1em;
+            margin-left: 42.2vw;
+            width: 14vw;
+            padding: 3px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        #usernameIn{
+            height: 20px;
+            border-radius: 3px;
+            margin: 10px;
+            font-family: 'Trubuchet MS';
+            letter-spacing: 0.1em;
+            font-size: 1.3em;
+            margin-left: 42vw;
+        }
+
+        #emailIn{
+            height: 20px;
+            border-radius: 3px;
+            margin: 10px;
+            font-family: 'Trubuchet MS';
+            letter-spacing: 0.1em;
+            font-size: 1.3em;
+            margin-left: 42vw;
+        }
+
+        .passIn{
+            height: 20px;
+            border-radius: 3px;
+            margin: 10px;
+            font-family: 'Trubuchet MS';
+            letter-spacing: 0.1em;
+            font-size: 1.3em;
+            margin-left: 42vw;
+        }
+
+        #submitIn{
+            margin-top: 1%;
+            border-radius: 3px;
+            font-family: 'Sofia';
+            letter-spacing: 0.3em;
+            font-size: 1.1em;
+            margin-left: 45.6vw;
+            width: 7vw;
+        }
+
+        #foot{
+            margin-top:12vh;
+            color: white;
+            text-align: center;
+            font-size: 1.3em;
+            letter-spacing: 4px;
+        }
+
+        #heart{
+            color: red;
+        }
+
+        #nameLink{
+            text-decoration: none;
+            color: orange;
+        }
+
+    </style>
 </head>
 <body>
-	<h1>Clippy</h1>
-    <h2>Create an account</h1>
+	<a onclick="#"><h1 class="title">Clippy</h1></a>
+    <div class="tagline"> A web app to store notes and to-do's</div>
+    <h2 id="registerTitle">Sign Up</h2>
     <form action="register.php" method="post" autocomplete="off">
-    	<div><?= $_SESSION['message'] ?></div>
-    	<input type="text" placeholder="Username" name="username" required />
-	    <input type="email" placeholder="Email" name="email" required />
-	    <input type="password" placeholder="Password" name="password" autocomplete="new-password" required />
-	    <input type="password" placeholder="Confirm Password" name="confirmpassword" autocomplete="new-password" required />
-	    <input type="submit" value="Register" name="register"/>
+    	<div id="errMsg"><?= $_SESSION['message'] ?></div>
+    	<div><input id="usernameIn" type="text" placeholder="Username" name="username" required /></div>
+	    <div><input id="emailIn" type="email" placeholder="Email" name="email" required /></div>
+	    <div><input class="passIn" type="password" placeholder="Password" name="password" autocomplete="new-password" required /></div>
+	    <div><input class="passIn" type="password" placeholder="Confirm Password" name="confirmpassword" autocomplete="new-password" required /></div>
+	    <div><input id="submitIn" type="submit" value="Register" name="register"/></div>
     </form>
+    <footer>
+        <p id="foot">Made with <span id="heart">&hearts;</span> by <a id="nameLink" href="https://BharathKumarRavichandran.github.io">Bharath Kumar Ravichandran</a></p>
+    </footer>
 </body>
 </html>
