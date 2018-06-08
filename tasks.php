@@ -208,21 +208,21 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		}
 
 		.checked{
-    		color: orange;
+    		color: red;
 		}
 
 		.editTimeClass{
 			margin-top: 10px;
 			font-family: "Trebuchet MS";
 			font-style: italic;
-			font-size: 1.2em;
+			font-size: 1.1em;
 			padding: 10px;
 		}
 
 		.createTimeClass{
 			font-family: "Trebuchet MS";
 			font-style: italic;
-			font-size: 1.2em;
+			font-size: 1.1em;
 			margin-top: 5px;
 			padding: 10px;
 			padding-bottom: 0;

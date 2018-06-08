@@ -234,14 +234,14 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		.editTimeClass{
 			font-family: "Trebuchet MS";
 			font-style: italic;
-			font-size: 1.2em;
+			font-size: 1.1em;
 			padding: 10px;
 		}
 
 		.createTimeClass{
 			font-family: "Trebuchet MS";
 			font-style: italic;
-			font-size: 1.2em;
+			font-size: 1.1em;
 			padding: 10px;
 			padding-bottom: 0;
 		}
