@@ -149,8 +149,27 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
             width: 7vw;
         }
 
+        .options{
+            margin-top: 5vh;
+        }
+
+        .text{
+            font-family: 'Sofia';
+            color: orange;
+            font-size: 1.2em;
+            margin-left: 40vw;
+        }
+
+        #loginb{
+            border-radius: 3px;
+            font-family: 'Sofia';
+            letter-spacing: 0.3em;
+            font-size: 1em;
+            width: 7vw;
+        }
+
         #foot{
-            margin-top:12vh;
+            margin-top:5vh;
             color: white;
             text-align: center;
             font-size: 1.3em;
@@ -180,8 +199,19 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 	    <div><input class="passIn" type="password" placeholder="Confirm Password" name="confirmpassword" autocomplete="new-password" required /></div>
 	    <div><input id="submitIn" type="submit" value="Register" name="register"/></div>
     </form>
+    <div class="options">
+        <span class="text">Already have an account?</span>
+        <span><button id="loginb" onclick="login()">Login</button></span>
+    </div>
     <footer>
         <p id="foot">Made with <span id="heart">&hearts;</span> by <a id="nameLink" href="https://BharathKumarRavichandran.github.io">Bharath Kumar Ravichandran</a></p>
     </footer>
+<script>
+
+    function login(){
+        window.location = "login.php";
+    }
+
+</script>       
 </body>
 </html>
