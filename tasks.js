@@ -102,9 +102,13 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 	createTimeDiv.setAttribute("id","createTime"+k);
 
 	//Setting classes for elements
-	starSpan.setAttribute("class","fa fa-star");
-	editSpan.setAttribute("class","fa fa-edit");
-	delSpan.setAttribute("class","fa fa-trash-o");
+	divBox.setAttribute("class", "taskBoxClass");
+	taskSpan.setAttribute("class", "taskClass");
+	starSpan.setAttribute("class", "fa fa-star fa-2x");
+	editSpan.setAttribute("class", "fa fa-edit fa-2x");
+	delSpan.setAttribute("class", "fa fa-trash-o fa-2x");
+	editTimeDiv.setAttribute("class", "editTimeClass");
+	createTimeDiv.setAttribute("class", "createTimeClass");
 
 	//Striking out if the checkbox is checked
 	if(tChecked=="yes"){
@@ -161,13 +165,13 @@ function editClick(edit){//Function that allows user to edit the contents of the
 
 	k=edit.getAttribute("id")[4];
 
-	if(document.getElementById("edit"+k).getAttribute("class")=="fa fa-edit"){
+	if(document.getElementById("edit"+k).getAttribute("class")=="fa fa-edit fa-2x"){
 		document.getElementById("taskText"+k).setAttribute("contentEditable",true);
-		document.getElementById("edit"+k).setAttribute("class","fa fa-check-circle");	
+		document.getElementById("edit"+k).setAttribute("class","fa fa-check-circle fa-2x");	
 	}
 	else{
 		document.getElementById("taskText"+k).setAttribute("contentEditable",false);
-		document.getElementById("edit"+k).setAttribute("class","fa fa-edit");
+		document.getElementById("edit"+k).setAttribute("class","fa fa-edit fa-2x");
 		editTaskDb(k);
 	}	
 
