@@ -101,9 +101,15 @@ function createNoteBox(k,nTitle,nText,nEditTime,nCreateTime){//Function to creat
 
 
 	//Setting classes for elements
-	editSpan.setAttribute("class","fa fa-edit");
-	imgSpan.setAttribute("class","fa fa-image");
-	delSpan.setAttribute("class","fa fa-trash-o");
+	noteBoxDiv.setAttribute("class","noteBoxClass");
+	titleDiv.setAttribute("class","titleClass");
+	noteTextDiv.setAttribute("class","noteAreaClass");
+	buttonsDiv.setAttribute("class","faButtons");
+	editSpan.setAttribute("class","fa fa-edit fa-2x");
+	imgSpan.setAttribute("class","fa fa-image fa-2x");
+	delSpan.setAttribute("class","fa fa-trash-o fa-2x");
+	editTimeDiv.setAttribute("class","editTimeClass");
+	createTimeDiv.setAttribute("class","createTimeClass");
 
 	//Setting other attributes
 	editSpan.setAttribute("onclick","editClick(this)");
@@ -119,15 +125,15 @@ function editClick(edit){//Function that allows user to edit the contents of the
 
 	k=edit.getAttribute("id")[4];
 
-	if(document.getElementById("edit"+k).getAttribute("class")=="fa fa-edit"){
+	if(document.getElementById("edit"+k).getAttribute("class")=="fa fa-edit fa-2x"){
 		document.getElementById("title"+k).setAttribute("contentEditable",true);
 		document.getElementById("noteTextArea"+k).setAttribute("contentEditable",true);
-		document.getElementById("edit"+k).setAttribute("class","fa fa-check-circle");
+		document.getElementById("edit"+k).setAttribute("class","fa fa-check-circle fa-2x");
 	}
 	else{
 		document.getElementById("title"+k).setAttribute("contentEditable",false);
 		document.getElementById("noteTextArea"+k).setAttribute("contentEditable",false);
-		document.getElementById("edit"+k).setAttribute("class","fa fa-edit");
+		document.getElementById("edit"+k).setAttribute("class","fa fa-edit fa-2x");
 		editNoteDb(k);
 	}	
 
