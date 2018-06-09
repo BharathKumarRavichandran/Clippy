@@ -21,7 +21,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 	if($result->num_rows>0){
 		while($row = $result->fetch_assoc()){
 
-			$r = array('NoteNumber'=>$row["NoteNumber"],'Title'=>$row["Title"],'NoteText'=>$row["NoteText"],'EditTime'=>$row["EditTime"],'CreateTime'=>$row["CreateTime"]);
+			$r = array('NoteNumber'=>$row["NoteNumber"],'Title'=>$row["Title"],'NoteText'=>$row["NoteText"],'Labels'=>$row["Labels"],'EditTime'=>$row["EditTime"],'CreateTime'=>$row["CreateTime"]);
 
 			array_push($userNoteData,$r);
 		}

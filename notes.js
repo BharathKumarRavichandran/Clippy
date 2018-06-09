@@ -2,6 +2,8 @@ var i=0;
 var k=0;
 var notes=0;
 
+var labelArray = new Array();
+
 if (window.XMLHttpRequest) {
   		xmlhttp = new XMLHttpRequest();
 } 
@@ -26,8 +28,10 @@ function initialise(){//Function to get stored note data in database and to crea
 	    	var data = JSON.parse(this.responseText);			
 	    	for(i=0;i<data.length;i++){
 	    		notes++;
+	    		labelArray[data[i].NoteNumber]=0;
 	    		createNoteBox(data[i].NoteNumber,data[i].Title,data[i].NoteText,data[i].EditTime,data[i].CreateTime);
-	    	}
+	    		labelInit(data[i].NoteNumber,data[i].Labels);
+	    	}	
 	    }
 	};
 	xmlhttp.open("POST","getNoteData.php",true);
@@ -37,20 +41,25 @@ function initialise(){//Function to get stored note data in database and to crea
 
 function newNote(){//Function to collect current note data to call box creating and data storing function
 
-	var d = new Date();
-	var editTime = "Edited: "+d;
-	var createTime = "Created: "+d;
-	notes++;
-	createNoteBox(notes,document.getElementById("titleInput").value,document.getElementById("noteAreaInput").value,editTime,createTime);
-	addNoteDb(notes,document.getElementById("titleInput").value,document.getElementById("noteAreaInput").value,editTime,createTime);
+	if((document.getElementById("titleInput").value!="")&&(document.getElementById("noteAreaInput").value!="")){
+		
+		var d = new Date();
+		var editTime = "Edited: "+d;
+		var createTime = "Created: "+d;
+		notes++;
+		createNoteBox(notes,document.getElementById("titleInput").value,document.getElementById("noteAreaInput").value,editTime,createTime);
+		addNoteDb(notes,document.getElementById("titleInput").value,document.getElementById("noteAreaInput").value,editTime,createTime);
 
-	document.getElementById("titleInput").value="";
-	document.getElementById("noteAreaInput").value="";
-	document.getElementById("titleInput").setAttribute("placeholder","Title");
-	document.getElementById("noteAreaInput").setAttribute("placeholder","Notes");
+		document.getElementById("titleInput").value="";
+		document.getElementById("noteAreaInput").value="";
+		document.getElementById("titleInput").setAttribute("placeholder","Title");
+		document.getElementById("noteAreaInput").setAttribute("placeholder","Notes");
+	}
 }
 
 function createNoteBox(k,nTitle,nText,nEditTime,nCreateTime){//Function to create all nodes and to add note box
+
+	labelArray[k]=0;
 
 	var noteBoxDiv = document.createElement("div"); 
 	var titleDiv = document.createElement("div");
@@ -60,18 +69,24 @@ function createNoteBox(k,nTitle,nText,nEditTime,nCreateTime){//Function to creat
 	var imgSpan = document.createElement("span");
 	var fileUploadInput = document.createElement("input");
 	var delSpan = document.createElement("span");
+	var labAddDiv = document.createElement("div");
+	var labIn = document.createElement("input");
+	var addLabSpan = document.createElement("span");
+	var labelDiv = document.createElement("div");
 	var editTimeDiv = document.createElement("div");
 	var createTimeDiv = document.createElement("div"); 
 
 	//create text nodes for the above elements
 	var titleText = document.createTextNode(nTitle);
 	var noteAreaText = document.createTextNode(nText); 
+	var labelText = document.createTextNode("Add a new label : ");
 	var editTimeText = document.createTextNode(nEditTime);
 	var createTimeText = document.createTextNode(nCreateTime);
 
 	//Appending textnodes
 	titleDiv.appendChild(titleText);
 	noteTextDiv.appendChild(noteAreaText);
+	labAddDiv.appendChild(labelText);
 	editTimeDiv.appendChild(editTimeText);
 	createTimeDiv.appendChild(createTimeText);
 
@@ -83,6 +98,10 @@ function createNoteBox(k,nTitle,nText,nEditTime,nCreateTime){//Function to creat
 	buttonsDiv.appendChild(fileUploadInput);
 	buttonsDiv.appendChild(delSpan);
 	noteBoxDiv.appendChild(buttonsDiv);
+	labAddDiv.appendChild(labIn);
+	labAddDiv.appendChild(addLabSpan);
+	noteBoxDiv.appendChild(labAddDiv);
+	noteBoxDiv.appendChild(labelDiv);
 	noteBoxDiv.appendChild(editTimeDiv);
 	noteBoxDiv.appendChild(createTimeDiv);
 	document.getElementById("notesRegion").appendChild(noteBoxDiv);
@@ -96,6 +115,9 @@ function createNoteBox(k,nTitle,nText,nEditTime,nCreateTime){//Function to creat
 	imgSpan.setAttribute("id","imgUpload"+k);
 	fileUploadInput.setAttribute("id","fileUpload"+k);
 	delSpan.setAttribute("id","del"+k);
+	labIn.setAttribute("id","labIn"+k);
+	addLabSpan.setAttribute("id","addLabel"+k);
+	labelDiv.setAttribute("id","labelDiv"+k);
 	editTimeDiv.setAttribute("id","editTime"+k);
 	createTimeDiv.setAttribute("id","createTime"+k);
 
@@ -108,6 +130,10 @@ function createNoteBox(k,nTitle,nText,nEditTime,nCreateTime){//Function to creat
 	editSpan.setAttribute("class","fa fa-edit fa-2x");
 	imgSpan.setAttribute("class","fa fa-image fa-2x");
 	delSpan.setAttribute("class","fa fa-trash-o fa-2x");
+	labAddDiv.setAttribute("class","labAddClass");
+	labIn.setAttribute("class","labInClass");
+	addLabSpan.setAttribute("class","fa fa-plus-square fa-1x");
+	labelDiv.setAttribute("class","labelDivClass");
 	editTimeDiv.setAttribute("class","editTimeClass");
 	createTimeDiv.setAttribute("class","createTimeClass");
 
@@ -118,6 +144,11 @@ function createNoteBox(k,nTitle,nText,nEditTime,nCreateTime){//Function to creat
 	fileUploadInput.setAttribute("accept","image/*");
 	fileUploadInput.setAttribute("style","display:none");
 	delSpan.setAttribute("onclick","delClick(this)");
+	labIn.setAttribute("type","text");
+	labIn.setAttribute("name","label");
+	labIn.setAttribute("placeholder","New Label");
+	labIn.setAttribute("onkeyup","newLabel(this,event,5)");
+	addLabSpan.setAttribute("onclick","newLabel(this,event,8)");
 
 }
 
@@ -188,6 +219,73 @@ function addNoteDb(noteNumber,titleText,noteText,editTime,createTime){//Function
 	var purpose = "add";
 	var params = "noteNumber="+noteNumber+"&titleText="+titleText+"&noteText="+noteText+"&editTime="+editTime+"&createTime="+createTime+"&purpose="+purpose;
 	
+	xmlhttp.open('POST',url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
+
+}
+
+function labelInit(k,labelTextFull){
+	
+	
+
+	var labelTextArray = labelTextFull.split(" ");
+
+	for(i=0;i<labelTextArray.length-1;i++){
+		
+		labelText = labelTextArray[i];
+
+		labelArray[k]++;
+		var labSpan = document.createElement("span");
+		var labelText = document.createTextNode(labelText);
+
+		labSpan.appendChild(labelText);
+		document.getElementById("labelDiv"+k).appendChild(labSpan);
+
+		labSpan.setAttribute("id",k+"label"+labelArray[k]);
+		labSpan.setAttribute("class","labSpanClass");	
+		
+	}
+
+
+	document.getElementById("labIn"+k).value="";
+	document.getElementById("labIn"+k).setAttribute("placeholder","New Label");
+
+}
+
+function newLabel(y,event,l){
+
+	k = y.getAttribute("id")[l];
+
+	if(((event.keyCode==13&&l==5)||l==8)&&(document.getElementById("labIn"+k).value!=="")){ //enter keyCode=13
+
+		labelArray[k]++;
+
+		var labSpan = document.createElement("span");
+		var labelText = document.createTextNode(document.getElementById("labIn"+k).value);
+
+		labSpan.appendChild(labelText);
+		document.getElementById("labelDiv"+k).appendChild(labSpan);
+
+		labSpan.setAttribute("id",k+"label"+labelArray[k]);
+		labSpan.setAttribute("class","labSpanClass");
+		
+		addLabelDb(k);	
+
+		document.getElementById("labIn"+k).value="";
+		document.getElementById("labIn"+k).setAttribute("placeholder","New Label");
+
+	}
+	
+}
+
+function addLabelDb(k){
+
+	var url="notes.php";
+	var purpose = "labelAdd";
+	var label = document.getElementById("labIn"+k).value+" ";
+	var params = "noteNumber="+k+"&label="+label+"&purpose="+purpose;
+		
 	xmlhttp.open('POST',url,true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);

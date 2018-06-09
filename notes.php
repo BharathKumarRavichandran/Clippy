@@ -44,6 +44,16 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
 	}
 
+	else if($_POST["purpose"]=="labelAdd"){
+
+		$noteNumber = $_POST['noteNumber'];
+		$label = $_POST['label'];
+		
+		$sql = "UPDATE $tablename SET Labels=concat(Labels,'$label') WHERE NoteNumber = $noteNumber;";
+		$conn->query($sql);
+
+	}
+
 	else if($_POST["purpose"]=="delete"){
 
 		$noteNumber = $_POST['noteNumber'];
@@ -203,7 +213,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			opacity: 0.98;
 			width: 76vw;
 			margin-left: 1.7vw;
-			padding: 30px;
+			padding: 15px;
 			border-radius: 10px;	
 		}
 
@@ -215,7 +225,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			font-family: "Trebuchet MS";
 			font-style: italic;
 			font-size: 2.3em;
-			padding: 15px;
+			padding: 10px;
 		}
 
 		.noteAreaClass{
@@ -229,6 +239,36 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			padding: 5px;
 			padding-left: 10px;
 			padding-right: 10px;
+			padding-bottom: 20px;
+		}
+
+		.fa-plus-square{
+			color: black;
+		}
+
+		.labAddClass{
+			font-family: "Trebuchet MS";
+			font-size: 1em;
+			color: grey;
+		}
+
+		.labInClass{
+			border-radius: 3px;
+		}
+
+		.labelDivClass{
+			margin-top: 7px;
+		}
+
+		.labSpanClass{
+			background: lightblue;
+			border-style: outset;
+			border-radius: 5px;
+			font-family: "Trebuchet MS";
+			font-size: 1em;
+			padding: 4px;
+			margin-left: 5px;
+			margin-right: 5px;
 		}
 
 		.editTimeClass{
