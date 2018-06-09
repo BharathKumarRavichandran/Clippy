@@ -118,6 +118,7 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 	//Striking out if the checkbox is checked
 	if(tChecked=="yes"){
 		divBox.style.textDecoration ="line-through";
+		document.getElementById("taskStatus"+k).checked = true;
 	}
 	else{
 		divBox.style.textDecoration ="none";
