@@ -21,10 +21,11 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		$noteNumber = $_POST['noteNumber'];
 		$titleText = $_POST['titleText'];
 		$noteText = $_POST['noteText'];
+		$noteStar = $_POST['noteStar'];
 		$editTime = $_POST['editTime'];
 		$createTime = $_POST['createTime'];
 
-		$sql = "INSERT INTO $tablename(NoteNumber,Title,NoteText,EditTime,CreateTime) "."VALUES ('$noteNumber','$titleText','$noteText','$editTime','$createTime');";
+		$sql = "INSERT INTO $tablename(NoteNumber,Title,NoteText,Starred,EditTime,CreateTime) "."VALUES ('$noteNumber','$titleText','$noteText','$noteStar','$editTime','$createTime');";
 		$conn->query($sql);
 
 		$sql = "UPDATE user SET noteMaxCount='$noteNumber' WHERE username = '$username';";
@@ -39,7 +40,18 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		$noteText = $_POST['noteText'];
 		$editTime = $_POST['editTime'];
 
-		$sql = "UPDATE $tablename SET Title='$titleText', NoteText='$noteText', EditTime='$editTime' WHERE NoteNumber = $noteNumber;";
+		$sql = "UPDATE $tablename SET Title='$titleText', NoteText='$noteText',EditTime='$editTime' WHERE NoteNumber = $noteNumber;";
+		$conn->query($sql);
+
+	}
+
+	else if($_POST["purpose"]=="starEdit"){
+
+		$noteNumber = $_POST['noteNumber'];
+		$noteStar = $_POST['noteStar'];
+		$editTime = $_POST['editTime'];
+
+		$sql = "UPDATE $tablename SET Title='$titleText', Starred='$noteStar',EditTime='$editTime' WHERE NoteNumber = $noteNumber;";
 		$conn->query($sql);
 
 	}
@@ -102,6 +114,20 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			font-family: 'Sofia';
 		}
 
+		.labelsOPT{
+			padding: 6px 8px 6px 16px;
+		    color: #818181;
+		    display: block;
+			margin-top: 16%;
+			font-family: 'Comic Sans MS';
+			font-size: 1.6em;
+			color: darkred;
+			padding-bottom: 0px;
+		}
+
+		.labelLinks{
+			font-family: 'Comic Sans MS';
+		}
 
 		.sidenav a {
 		    padding: 6px 8px 6px 16px;
@@ -191,7 +217,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		}
 
 		.noteInputClass{
-			font-family: 'Sofia';
+			font-family: 'Comic Sans MS';
 			text-align: center;
 			height: 23vh;
 			width: 20vw;
@@ -207,9 +233,23 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			margin-left: 9.7vw;
 		}
 
+		.selClass{
+			margin-left: 45vw;
+		}
+
+		#selectTextId{
+			font-family: "Comic Sans MS";
+			font-size: 1.4em;
+			color: yellow;
+		}
+
+		.selectClass{
+			border-radius: 4px;
+		}
+
 		.noteBoxClass{
 			margin: 20px;
-			background: yellow;
+			background: orange;
 			opacity: 0.98;
 			width: 76vw;
 			margin-left: 1.7vw;
@@ -229,7 +269,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		}
 
 		.noteAreaClass{
-			font-family: "Trebuchet MS";
+			font-family: "Comic Sans MS";
 			font-size: 1.4em;
 			padding: 10px;
 			padding-bottom: 20px;
@@ -240,6 +280,14 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			padding-left: 10px;
 			padding-right: 10px;
 			padding-bottom: 20px;
+		}
+
+		.fa-star{
+			color: grey;
+		}
+
+		.checked{
+    		color: red;
 		}
 
 		.fa-plus-square{
@@ -302,11 +350,12 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		<a onclick="home()"><h2 class="title">Clippy</h2></a>
 	</div>
 	<div><?= $_SESSION['message'] ?></div>
-	<div class="sidenav" >
+	<div class="sidenav" id="sidenav">
 		<a class="home sidenavlinks" onclick="home()">Home</a>
 		<a class="sidenavlinks active">Notes</a>
 		<a class="sidenavlinks" onclick="tasks()">to-do lists</a>
 		<a class="sidenavlinks" onclick="logout()">Logout</a>
+		<div class="sidenavlinks labelsOPT">Labels :</div>>
 	</div>	
 	<div class="main title2"><h1>Notes</h1></div>
 	<div id="notesInput" class="main input">
@@ -317,6 +366,12 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			</div>
 		</div>	
 		<button class="addButtonClass" onclick="newNote()">Add notes</button>
+	</div>
+	<div class="main selClass"><span id="selectTextId">Sort based on:</span>
+		<select id="selectId" class="selectClass">
+			<option value="time" selected>Time</option>
+			<option value="importance">Importance</option>
+		</select>
 	</div>
 	<div id="notesRegion" class="main notesRegionClass">
 	</div>
