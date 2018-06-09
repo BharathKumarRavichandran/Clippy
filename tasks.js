@@ -123,9 +123,11 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 		divBox.style.textDecoration ="none";
 	}
 
+	divBox..style.background = "orange";
 	//Adding stars if it is starred
 	if(tStarred=="yes"){
 		starSpan.classList.add("checked");
+		divBox.style.background = "#01FF70";
 	}
 
 	//Setting other attributes
@@ -158,9 +160,11 @@ function starClick(taskStar){//Function to respond to user's star click
 
 	if(taskStar.classList.contains("checked")){
 		taskStar.classList.remove("checked");
+		document.getElementById("taskBox"+k).style.background = "orange";
 	}
 	else{
 		taskStar.classList.add("checked");
+		document.getElementById("taskBox"+k).style.background = "#01FF70";
 	}
 
 	editTaskDb(k);
