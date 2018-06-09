@@ -175,6 +175,20 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			border-radius: 3px;
 		}
 
+		.selClass{
+			margin-left: 45vw;
+		}
+
+		#selectTextId{
+			font-family: "Comic Sans MS";
+			font-size: 1.4em;
+			color: yellow;
+		}
+
+		.selectClass{
+			border-radius: 4px;
+		}
+
 		.taskBoxClass{
 			margin: 20px;
 			background: orange;
@@ -266,6 +280,12 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 	<div class="main">
 		<input id="taskInput" class="input" type="text" name="taskInput" placeholder="Task">
 		<div><button  class="addInputClass" onclick="newTask()">Add task</button></div>
+	</div>
+	<div class="main selClass"><span id="selectTextId">Sort based on:</span>
+		<select id="selectId" class="selectClass">
+			<option value="time" selected>Time</option>
+			<option value="importance">Importance</option>
+		</select>
 	</div>
 	<div id="taskRegion" class="main taskRegionClass">
 	</div>	

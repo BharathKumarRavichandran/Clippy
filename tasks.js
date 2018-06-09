@@ -123,11 +123,11 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 		divBox.style.textDecoration ="none";
 	}
 
-	divBox..style.background = "orange";
+	divBox.style.background = "orange";
 	//Adding stars if it is starred
 	if(tStarred=="yes"){
 		starSpan.classList.add("checked");
-		divBox.style.background = "#01FF70";
+		document.getElementById("taskBox"+k).style.background = "#01FF70";
 	}
 
 	//Setting other attributes
