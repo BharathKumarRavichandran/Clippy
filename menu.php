@@ -19,7 +19,6 @@ $_SESSION['message']="";
 	<title>Home | Clippy</title>
 	<link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet'>
 	<link rel="icon" type="image/png" href="assets/webnote.png">
-	<link rel="stylesheet" type="text/css" href="menu.css">
 	<style type="text/css">
 		
 		html,body{
