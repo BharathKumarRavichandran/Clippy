@@ -38,23 +38,27 @@ function initialise(){//Function to get stored task data in database and to crea
 
 function newTask(){//Function to collect current task data to call box creating and data storing function
 
-	task++;
+	if(document.getElementById("taskInput").value!==""){
+		
+		task++;
 
-	var d = new Date();
-	var taskNumber = task;
-	var checked = "no";
-	var taskText = document.getElementById("taskInput").value;
-	var starred = "no";
-	var editTime = "Edited: "+d;
-	var createTime = "Created: "+d;
+		var d = new Date();
+		var taskNumber = task;
+		var checked = "no";
+		var taskText = document.getElementById("taskInput").value;
+		var starred = "no";
+		var editTime = "Edited: "+d;
+		var createTime = "Created: "+d;
 
-	createBox(taskNumber,checked,taskText,starred,editTime,createTime);
-	
-	//Function call to save task data in database
-	addTaskDb(taskNumber,checked,taskText,starred,editTime,createTime);
+		createBox(taskNumber,checked,taskText,starred,editTime,createTime);
+		
+		//Function call to save task data in database
+		addTaskDb(taskNumber,checked,taskText,starred,editTime,createTime);
 
-	document.getElementById("taskInput").value="";
-	document.getElementById("taskInput").setAttribute("placeholder","Task");
+		document.getElementById("taskInput").value="";
+		document.getElementById("taskInput").setAttribute("placeholder","Task");
+
+	}	
 
 }
 
@@ -84,9 +88,9 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 	checkboxSpan.appendChild(checkbox);
 	divBox.appendChild(checkboxSpan);
 	divBox.appendChild(taskSpan);
-	divBox.appendChild(starSpan);
-	divBox.appendChild(editSpan);
 	divBox.appendChild(delSpan);
+	divBox.appendChild(editSpan);
+	divBox.appendChild(starSpan);
 	divBox.appendChild(editTimeDiv);
 	divBox.appendChild(createTimeDiv);
 	document.getElementById("taskRegion").appendChild(divBox);
@@ -103,6 +107,7 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 
 	//Setting classes for elements
 	divBox.setAttribute("class", "taskBoxClass");
+	checkbox.setAttribute("class","checkboxClass");
 	taskSpan.setAttribute("class", "taskClass");
 	starSpan.setAttribute("class", "fa fa-star fa-2x");
 	editSpan.setAttribute("class", "fa fa-edit fa-2x");

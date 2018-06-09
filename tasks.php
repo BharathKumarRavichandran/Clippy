@@ -186,7 +186,18 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		}
 
 		.taskBoxClass:hover{
-			transform: scale(1.06);
+			-ms-transform: scale(1.06); 
+			-moz-transform: scale(1.06);
+			-webkit-transform: scale(1.06);
+			-o-transform: scale(1.06);
+		}
+
+		.checkboxClass{
+			-ms-transform: scale(2); 
+			-moz-transform: scale(2);
+			-webkit-transform: scale(2);
+			-o-transform: scale(2);
+			padding: 10px;
 		}
 
 		.taskClass{
@@ -248,7 +259,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 	<div class="sidenav" >
 		<a class="home sidenavlinks" onclick="home()">Home</a>
 		<a class="sidenavlinks" onclick="notes()">Notes</a>
-		<a class="sidenavlinks active" onclick="task()">to-do lists</a>
+		<a class="sidenavlinks active">to-do lists</a>
 		<a class="sidenavlinks" onclick="logout()">Logout</a>
 	</div>
 	<div class="main title2"><h1>to-do lists</h1></div>
