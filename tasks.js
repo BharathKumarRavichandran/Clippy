@@ -148,19 +148,24 @@ function checkboxClick(button){//Function to respond to user's checkbox click
 	if(button.checked==true){
 		document.getElementById("taskBox"+k).style.textDecoration ="line-through";
 	}
+
 	else{
 		document.getElementById("taskBox"+k).style.textDecoration ="none";
 	}
 
 	editTaskDb(k);
 
-	while(taskRegion.firstChild) { //To remove the childs of tasksRegion
-    	taskRegion.removeChild(taskRegion.firstChild);
-	}
+	if(document.getElementById("selectId").value=="remaining"){
 
-	sortBoxCheck();
+		while(taskRegion.firstChild) { //To remove the childs of tasksRegion
+	    	taskRegion.removeChild(taskRegion.firstChild);
+		}
 
-	document.getElementById("selectId").value = "remaining";
+		sortBoxCheck();
+
+		document.getElementById("selectId").value = "remaining";
+	}	
+
 }
 
 function starClick(taskStar){//Function to respond to user's star click
@@ -177,6 +182,17 @@ function starClick(taskStar){//Function to respond to user's star click
 	}
 
 	editTaskDb(k);
+
+	if(document.getElementById("selectId").value=="importance"){
+
+		while(taskRegion.firstChild) { //To remove the childs of tasksRegion
+	    	taskRegion.removeChild(taskRegion.firstChild);
+		}
+
+		sortBoxImp();
+
+		document.getElementById("selectId").value = "importance";
+	}	
 }
 
 function editClick(edit){//Function that allows user to edit the contents of the task

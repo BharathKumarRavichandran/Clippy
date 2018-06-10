@@ -285,7 +285,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		<select id="selectId" class="selectClass" onchange="sortClick(this)">
 			<option value="time" selected>Time</option>
 			<option value="importance">Importance</option>
-			<option value="remaining" selected>Remaining</option>
+			<option value="remaining">Remaining</option>
 		</select>
 	</div>
 	<div id="taskRegion" class="main taskRegionClass">
