@@ -70,8 +70,10 @@ function createNoteBox(k,nTitle,nText,nStarred,nEditTime,nCreateTime){//Function
 	var buttonsDiv = document.createElement("div");
 	var starSpan = document.createElement("span"); 
 	var editSpan = document.createElement("span");
+	var form = document.createElement("form");
 	var imgSpan = document.createElement("span");
 	var fileUploadInput = document.createElement("input");
+	var submitInput = document.createElement("input");
 	var delSpan = document.createElement("span");
 	var labAddDiv = document.createElement("div");
 	var labIn = document.createElement("input");
@@ -99,9 +101,11 @@ function createNoteBox(k,nTitle,nText,nStarred,nEditTime,nCreateTime){//Function
 	noteBoxDiv.appendChild(noteTextDiv);
 	buttonsDiv.appendChild(starSpan);
 	buttonsDiv.appendChild(editSpan);
-	buttonsDiv.appendChild(imgSpan);
-	buttonsDiv.appendChild(fileUploadInput);
 	buttonsDiv.appendChild(delSpan);
+	form.appendChild(imgSpan);
+	form.appendChild(fileUploadInput);
+	form.appendChild(submitInput);
+	buttonsDiv.appendChild(form);
 	noteBoxDiv.appendChild(buttonsDiv);
 	labAddDiv.appendChild(labIn);
 	labAddDiv.appendChild(addLabSpan);
@@ -118,8 +122,9 @@ function createNoteBox(k,nTitle,nText,nStarred,nEditTime,nCreateTime){//Function
 	buttonsDiv.setAttribute("id","buttons"+k);
 	starSpan.setAttribute("id","star"+k);
 	editSpan.setAttribute("id","edit"+k);
+	form.setAttribute("id","form"+k);
 	imgSpan.setAttribute("id","imgUpload"+k);
-	fileUploadInput.setAttribute("id","fileUpload"+k);
+	fileUploadInput.setAttribute("id","fileToUpload"+k);
 	delSpan.setAttribute("id","del"+k);
 	labIn.setAttribute("id","labIn"+k);
 	addLabSpan.setAttribute("id","addLabel"+k);
@@ -147,10 +152,17 @@ function createNoteBox(k,nTitle,nText,nStarred,nEditTime,nCreateTime){//Function
 	//Setting other attributes
 	starSpan.setAttribute("onclick","starClick(this)");
 	editSpan.setAttribute("onclick","editClick(this)");
+	form.setAttribute("action","upload.php");
+	form.setAttribute("method","post");
+	form.setAttribute("enctype","multipart/form-data");
 	imgSpan.setAttribute("onclick","imgUploadClick(this)");
 	fileUploadInput.setAttribute("type","file");
+	fileUploadInput.setAttribute("name","fileToUpload");
 	fileUploadInput.setAttribute("accept","image/*");
 	fileUploadInput.setAttribute("style","display:none");
+	submitInput.setAttribute("type","submit");
+	submitInput.setAttribute("value","Upload Image");
+	submitInput.setAttribute("name","submit");
 	delSpan.setAttribute("onclick","delClick(this)");
 	labIn.setAttribute("type","text");
 	labIn.setAttribute("name","label");
@@ -236,7 +248,11 @@ function editNoteDb(k){//Function to update edited note data in database
 function imgUploadClick(imgUp){
 
 	k=imgUp.getAttribute("id")[9];
-	document.getElementById("fileUpload"+k).click();
+	document.getElementById("fileToUpload"+k).click();
+
+	document.getElementById("fileToUpload"+k).onchange = function() {
+    	document.getElementById("form"+k).submit();
+	};
 
 }
 
