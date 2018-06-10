@@ -176,7 +176,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		}
 
 		.selClass{
-			margin-left: 45vw;
+			margin-left: 48vw;
 		}
 
 		#selectTextId{
@@ -281,10 +281,11 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		<input id="taskInput" class="input" type="text" name="taskInput" placeholder="Task">
 		<div><button  class="addInputClass" onclick="newTask()">Add task</button></div>
 	</div>
-	<div class="main selClass"><span id="selectTextId">Sort based on:</span>
-		<select id="selectId" class="selectClass">
+	<div class="main selClass"><span id="selectTextId">Sort by:</span>
+		<select id="selectId" class="selectClass" onchange="sortClick(this)">
 			<option value="time" selected>Time</option>
 			<option value="importance">Importance</option>
+			<option value="remaining" selected>Remaining</option>
 		</select>
 	</div>
 	<div id="taskRegion" class="main taskRegionClass">

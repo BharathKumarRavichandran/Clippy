@@ -51,7 +51,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		$noteStar = $_POST['noteStar'];
 		$editTime = $_POST['editTime'];
 
-		$sql = "UPDATE $tablename SET Title='$titleText', Starred='$noteStar',EditTime='$editTime' WHERE NoteNumber = $noteNumber;";
+		$sql = "UPDATE $tablename SET Starred='$noteStar',EditTime='$editTime' WHERE NoteNumber = $noteNumber;";
 		$conn->query($sql);
 
 	}
@@ -234,7 +234,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		}
 
 		.selClass{
-			margin-left: 45vw;
+			margin-left: 48vw;
 		}
 
 		#selectTextId{
@@ -367,8 +367,8 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		</div>	
 		<button class="addButtonClass" onclick="newNote()">Add notes</button>
 	</div>
-	<div class="main selClass"><span id="selectTextId">Sort based on:</span>
-		<select id="selectId" class="selectClass">
+	<div class="main selClass"><span id="selectTextId">Sort by:</span>
+		<select id="selectId" class="selectClass" onchange="sortClick(this)">
 			<option value="time" selected>Time</option>
 			<option value="importance">Importance</option>
 		</select>

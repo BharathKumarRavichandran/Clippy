@@ -32,9 +32,9 @@ function initialise(){//Function to get stored note data in database and to crea
 	    		notes++;
 	    		labelArray[data[i].NoteNumber]=0;
 	    		createNoteBox(data[i].NoteNumber,data[i].Title,data[i].NoteText,data[i].Starred,data[i].EditTime,data[i].CreateTime);
-	    		labelInit(data[i].NoteNumber,data[i].Labels);
+	    		//labelInit(data[i].NoteNumber,data[i].Labels);
 	    	}	
-	    	labelNavbarAppend();
+	    	//labelNavbarAppend();
 	    }
 	};
 	xmlhttp.open("POST","getNoteData.php",true);
@@ -268,7 +268,7 @@ function addNoteDb(noteNumber,titleText,noteText,noteStar,editTime,createTime){/
 	xmlhttp.send(params);
 
 }
-
+/*
 function labelInit(k,labelTextFull){
 
 	labelTextInit+=labelTextFull;//Adding labels of all the notes for appending labels to navbar 
@@ -301,7 +301,7 @@ function newLabel(y,event,l){
 
 	k = y.getAttribute("id")[l];
 	var text = document.getElementById("labIn"+k).value;
-	var exists = /*labelAlreadyExistsNote(k,text)*/false;
+	var exists = /*labelAlreadyExistsNote(k,text)false;
 
 	if(((event.keyCode==13&&l==5)||l==8)&&(text!="")&&(exists==false)){ //enter keyCode=13
 
@@ -399,6 +399,70 @@ function labelNavbarAppend(){
 			labelLink.setAttribute("class","sidenavlinks labelLinks");
 		}	
 	}
+}*/
+
+function sortClick(y){
+
+	while(notesRegion.firstChild) { //To remove the childs of notesRegion
+    	notesRegion.removeChild(notesRegion.firstChild);
+	}
+
+	if(document.getElementById(y.getAttribute("id")).value=="importance"){
+		sortBoxImp();
+	}
+
+	else if(document.getElementById(y.getAttribute("id")).value=="time"){
+		sortBoxTime();
+	}
+}
+
+function sortBoxImp(){
+
+	var params="";
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){
+	    	var data = JSON.parse(this.responseText);			
+	    	
+	    	for(i=0;i<data.length;i++){
+	    		if(data[i].Starred=="yes"){
+		    		createNoteBox(data[i].NoteNumber,data[i].Title,data[i].NoteText,data[i].Starred,data[i].EditTime,data[i].CreateTime);
+		    		//labelInit(data[i].NoteNumber,data[i].Labels);
+		    	}	
+	    	}	
+
+	    	for(i=0;i<data.length;i++){
+	    		if(data[i].Starred=="no"){
+		    		createNoteBox(data[i].NoteNumber,data[i].Title,data[i].NoteText,data[i].Starred,data[i].EditTime,data[i].CreateTime);
+		    		//labelInit(data[i].NoteNumber,data[i].Labels);
+		    	}	
+	    	}	
+	    }
+	};
+	xmlhttp.open("POST","getNoteData.php",true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
+
+}
+
+function sortBoxTime(){
+
+	var params="";
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){
+	    	var data = JSON.parse(this.responseText);			
+	    	
+	    	for(i=0;i<data.length;i++){
+		    	createNoteBox(data[i].NoteNumber,data[i].Title,data[i].NoteText,data[i].Starred,data[i].EditTime,data[i].CreateTime);
+		    	//labelInit(data[i].NoteNumber,data[i].Labels);	
+	    	}		
+	    }
+	};
+	xmlhttp.open("POST","getNoteData.php",true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
+
 }
 
 initialise();

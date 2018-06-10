@@ -153,6 +153,14 @@ function checkboxClick(button){//Function to respond to user's checkbox click
 	}
 
 	editTaskDb(k);
+
+	while(taskRegion.firstChild) { //To remove the childs of tasksRegion
+    	taskRegion.removeChild(taskRegion.firstChild);
+	}
+
+	sortBoxCheck();
+
+	document.getElementById("selectId").value = "remaining";
 }
 
 function starClick(taskStar){//Function to respond to user's star click
@@ -243,6 +251,93 @@ function addTaskDb(taskNumber,checked,taskText,starred,editTime,createTime){//Fu
 	var params = "taskNumber="+taskNumber+"&checked="+checked+"&taskText="+taskText+"&starred="+starred+"&editTime="+editTime+"&createTime="+createTime+"&purpose="+purpose;
 	
 	xmlhttp.open('POST',url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
+
+}
+
+function sortClick(y){
+
+	while(taskRegion.firstChild) { //To remove the childs of tasksRegion
+    	taskRegion.removeChild(taskRegion.firstChild);
+	}
+
+	if(document.getElementById(y.getAttribute("id")).value=="importance"){
+		sortBoxImp();
+	}
+
+	else if(document.getElementById(y.getAttribute("id")).value=="time"){
+		sortBoxTime();
+	}
+
+	else if(document.getElementById(y.getAttribute("id")).value=="remaining"){
+		sortBoxCheck();
+	}
+}
+
+function sortBoxCheck(){
+
+	var params="";
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){
+	    	var data = JSON.parse(this.responseText);			
+	    	for(i=0;i<data.length;i++){
+	    		if(data[i].Checked=="no"){
+	    			createBox(data[i].TaskNumber,data[i].Checked,data[i].TaskText,data[i].Starred,data[i].EditTime,data[i].CreateTime);
+	    		}
+	    	}
+	    	for(i=0;i<data.length;i++){
+	    		if(data[i].Checked=="yes"){
+	    			createBox(data[i].TaskNumber,data[i].Checked,data[i].TaskText,data[i].Starred,data[i].EditTime,data[i].CreateTime);
+	    		}
+	    	}
+	    }
+	};
+	xmlhttp.open("POST","getTaskData.php",true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
+
+}
+
+function sortBoxImp(){
+
+	var params="";
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){
+	    	var data = JSON.parse(this.responseText);			
+	    	for(i=0;i<data.length;i++){
+	    		if(data[i].Starred=="yes"){
+	    			createBox(data[i].TaskNumber,data[i].Checked,data[i].TaskText,data[i].Starred,data[i].EditTime,data[i].CreateTime);
+	    		}
+	    	}
+	    	for(i=0;i<data.length;i++){
+	    		if(data[i].Starred=="no"){
+	    			createBox(data[i].TaskNumber,data[i].Checked,data[i].TaskText,data[i].Starred,data[i].EditTime,data[i].CreateTime);
+	    		}
+	    	}
+	    }
+	};
+	xmlhttp.open("POST","getTaskData.php",true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
+
+}
+
+function sortBoxTime(){
+
+	var params="";
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){
+	    	var data = JSON.parse(this.responseText);			
+	    	for(i=0;i<data.length;i++){
+	    		createBox(data[i].TaskNumber,data[i].Checked,data[i].TaskText,data[i].Starred,data[i].EditTime,data[i].CreateTime);
+	    	}
+	    }
+	};
+	xmlhttp.open("POST","getTaskData.php",true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);
 
