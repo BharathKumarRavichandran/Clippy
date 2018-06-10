@@ -417,7 +417,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"&&(!isset($_POST['purpose']))){
 	<div><?= $_SESSION['message'] ?></div>
 	<div class="sidenav" id="sidenav">
 		<a class="home sidenavlinks" onclick="home()">Home</a>
-		<a class="sidenavlinks active">Notes</a>
+		<a id="noteLinkId" class="sidenavlinks active">Notes</a>
 		<a class="sidenavlinks" onclick="tasks()">to-do lists</a>
 		<a class="sidenavlinks" onclick="logout()">Logout</a>
 		<div class="sidenavlinks labelsOPT">Labels :</div>>
@@ -454,6 +454,11 @@ if($_SERVER['REQUEST_METHOD']=="POST"&&(!isset($_POST['purpose']))){
 		    navbar.classList.remove("sticky");
 		  }
 		}
+
+		function note(){
+			window.location = "notes.php";
+		}
+
 	</script>
 <script src="functions.js"></script>	
 <script type="text/javascript" src="notes.js">

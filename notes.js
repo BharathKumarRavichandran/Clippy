@@ -3,9 +3,13 @@ var j=0;
 var t=0;
 var k=0;
 var notes=0;
+var data;
+var exist;
+var allowed=false;
 var labelTextInit ="";
-var labelArrayInit = new Array();
 
+var labels = new Array();
+var labelArrayInit = new Array();
 var labelArray = new Array();
 var imgArray = new Array();
 
@@ -30,7 +34,7 @@ function initialise(){//Function to get stored note data in database and to crea
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function(){
 	    if(this.readyState==4&&this.status==200){
-	    	var data = JSON.parse(this.responseText);			
+	    	data = JSON.parse(this.responseText);			
 	    	for(i=0;i<data.length;i++){
 	    		notes++;
 	    		labelArray[data[i].NoteNumber]=0;
@@ -274,6 +278,8 @@ function delClick(del){//Function to delete a note
 
 	k=del.getAttribute("id")[3];
 
+	delete labels[k];
+
 	var url="notes.php";
 	var noteNumber = k;
 	var purpose = "delete";
@@ -303,12 +309,14 @@ function labelInit(k,labelTextFull){
 
 	labelTextInit+=labelTextFull;//Adding labels of all the notes for appending labels to navbar 
 	
+	labels[k] = new Array();
 	var labelTextArr = new Array();
 	labelTextArr = labelTextFull.split(" ");
 
 	for(j=0;j<labelTextArr.length-1;j++){
-		
+
 		labelText = labelTextArr[j];
+		labels[k].push(labelText);
 
 		labelArray[k]++;
 		var labSpan = document.createElement("span");
@@ -332,6 +340,8 @@ function newLabel(y,event,l){
 
 	if(((event.keyCode==13&&l==5)||l==8)&&(text!="")&&(exists==false)){ //enter keyCode=13
 
+		labels[k] = ( typeof labels[k] != 'undefined' && labels[k] instanceof Array ) ? labels[k] : [];
+		labels[k].push(text);
 		labelArray[k]++;
 
 		var labSpan = document.createElement("span");	
@@ -350,7 +360,6 @@ function newLabel(y,event,l){
 		document.getElementById("sidenav").appendChild(labelLink);
 
 		labelLink.setAttribute("class","sidenavlinks labelLinks");
-		//labelLink.setAttribute("onclick","labelsPage()");
 		
 		addLabelDb(k);	
 
@@ -424,8 +433,66 @@ function labelNavbarAppend(){
 			document.getElementById("sidenav").appendChild(labelLink);
 
 			labelLink.setAttribute("class","sidenavlinks labelLinks");
+			labelLink.setAttribute("onclick","labelView(this)");
 		}	
 	}
+}
+
+function labelView(y){
+	
+	if(document.getElementById("noteLinkId").classList.contains("active")){
+		document.getElementById("noteLinkId").classList.remove("active");
+		document.getElementById("noteLinkId").setAttribute("onclick","note()");
+	}
+
+	var children = document.getElementById("sidenav").children;
+	for(t=0;t<children.length;t++){
+		if(children[t].classList.contains("active")){
+			children[t].classList.remove("active");
+		}
+	} 
+
+	y.classList.add("active");
+
+	while(notesRegion.firstChild){ //To remove the childs of notesRegion
+    	notesRegion.removeChild(notesRegion.firstChild);
+	}
+
+	var labelLinkText = y.innerHTML;
+
+	var params="";
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function(){
+		if(this.readyState==4&&this.status==200){
+		    data = JSON.parse(this.responseText);	
+		    for(t=1;t<=notes;t++){
+		
+				if(typeof(labels[t])!=='undefined'&&labels[t].length>0){
+					exist = true;
+				}
+				else{
+					exist = false;
+				}
+
+				if(exist==true){
+					for(j=0;j<labels[t].length;j++){
+						if(labelLinkText==labels[t][j]){
+							allowed = true;
+						}
+						if(allowed==true){
+							createNoteBox(data[t-1].NoteNumber,data[t-1].Title,data[t-1].NoteText,data[t-1].Starred,data[t-1].EditTime,data[t-1].CreateTime);
+				    		labelInit(data[t-1].NoteNumber,data[t-1].Labels);
+			    			imgsInit(data[t-1].NoteNumber,data[t-1].ImgPath);
+			    		}	
+					}
+				}
+			}
+		}	
+	};
+	xmlhttp.open("POST","getNoteData.php",true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
+
 }
 
 function imgsInit(k,filePathFull){//Function that attachs images to notebox
