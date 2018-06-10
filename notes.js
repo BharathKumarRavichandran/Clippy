@@ -32,9 +32,9 @@ function initialise(){//Function to get stored note data in database and to crea
 	    		notes++;
 	    		labelArray[data[i].NoteNumber]=0;
 	    		createNoteBox(data[i].NoteNumber,data[i].Title,data[i].NoteText,data[i].Starred,data[i].EditTime,data[i].CreateTime);
-	    		//labelInit(data[i].NoteNumber,data[i].Labels);
+	    		labelInit(data[i].NoteNumber,data[i].Labels);
 	    	}	
-	    	//labelNavbarAppend();
+	    	labelNavbarAppend();
 	    }
 	};
 	xmlhttp.open("POST","getNoteData.php",true);
@@ -268,16 +268,17 @@ function addNoteDb(noteNumber,titleText,noteText,noteStar,editTime,createTime){/
 	xmlhttp.send(params);
 
 }
-/*
+
 function labelInit(k,labelTextFull){
 
 	labelTextInit+=labelTextFull;//Adding labels of all the notes for appending labels to navbar 
+	
+	var labelTextArr = new Array();
+	labelTextArr = labelTextFull.split(" ");
 
-	var labelTextArray = labelTextFull.split(" ");
-
-	for(i=0;i<labelTextArray.length-1;i++){
+	for(j=0;j<labelTextArr.length-1;j++){
 		
-		labelText = labelTextArray[i];
+		labelText = labelTextArr[j];
 
 		labelArray[k]++;
 		var labSpan = document.createElement("span");
@@ -291,17 +292,13 @@ function labelInit(k,labelTextFull){
 
 	}
 
-
-	document.getElementById("labIn"+k).value="";
-	document.getElementById("labIn"+k).setAttribute("placeholder","New Label");
-
 }
 
 function newLabel(y,event,l){
 
 	k = y.getAttribute("id")[l];
 	var text = document.getElementById("labIn"+k).value;
-	var exists = /*labelAlreadyExistsNote(k,text)false;
+	var exists = /*labelAlreadyExistsNote(k,text)*/false;
 
 	if(((event.keyCode==13&&l==5)||l==8)&&(text!="")&&(exists==false)){ //enter keyCode=13
 
@@ -399,7 +396,7 @@ function labelNavbarAppend(){
 			labelLink.setAttribute("class","sidenavlinks labelLinks");
 		}	
 	}
-}*/
+}
 
 function sortClick(y){
 
@@ -427,14 +424,14 @@ function sortBoxImp(){
 	    	for(i=0;i<data.length;i++){
 	    		if(data[i].Starred=="yes"){
 		    		createNoteBox(data[i].NoteNumber,data[i].Title,data[i].NoteText,data[i].Starred,data[i].EditTime,data[i].CreateTime);
-		    		//labelInit(data[i].NoteNumber,data[i].Labels);
+		    		labelInit(data[i].NoteNumber,data[i].Labels);
 		    	}	
 	    	}	
 
 	    	for(i=0;i<data.length;i++){
 	    		if(data[i].Starred=="no"){
 		    		createNoteBox(data[i].NoteNumber,data[i].Title,data[i].NoteText,data[i].Starred,data[i].EditTime,data[i].CreateTime);
-		    		//labelInit(data[i].NoteNumber,data[i].Labels);
+		    		labelInit(data[i].NoteNumber,data[i].Labels);
 		    	}	
 	    	}	
 	    }
@@ -455,7 +452,7 @@ function sortBoxTime(){
 	    	
 	    	for(i=0;i<data.length;i++){
 		    	createNoteBox(data[i].NoteNumber,data[i].Title,data[i].NoteText,data[i].Starred,data[i].EditTime,data[i].CreateTime);
-		    	//labelInit(data[i].NoteNumber,data[i].Labels);	
+		    	labelInit(data[i].NoteNumber,data[i].Labels);	
 	    	}		
 	    }
 	};
