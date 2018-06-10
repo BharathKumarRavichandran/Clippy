@@ -1,10 +1,13 @@
 var i=0;
+var j=0;
+var t=0;
 var k=0;
 var notes=0;
 var labelTextInit ="";
 var labelArrayInit = new Array();
 
 var labelArray = new Array();
+var imgArray = new Array();
 
 if (window.XMLHttpRequest) {
   		xmlhttp = new XMLHttpRequest();
@@ -31,8 +34,10 @@ function initialise(){//Function to get stored note data in database and to crea
 	    	for(i=0;i<data.length;i++){
 	    		notes++;
 	    		labelArray[data[i].NoteNumber]=0;
+	    		imgArray[data[i].NoteNumber]=0;
 	    		createNoteBox(data[i].NoteNumber,data[i].Title,data[i].NoteText,data[i].Starred,data[i].EditTime,data[i].CreateTime);
 	    		labelInit(data[i].NoteNumber,data[i].Labels);
+	    		imgsInit(data[i].NoteNumber,data[i].ImgPath);
 	    	}	
 	    	labelNavbarAppend();
 	    }
@@ -79,6 +84,7 @@ function createNoteBox(k,nTitle,nText,nStarred,nEditTime,nCreateTime){//Function
 	var labIn = document.createElement("input");
 	var addLabSpan = document.createElement("span");
 	var labelDiv = document.createElement("div");
+	var imgDiv = document.createElement("div");
 	var editTimeDiv = document.createElement("div");
 	var createTimeDiv = document.createElement("div"); 
 
@@ -107,6 +113,7 @@ function createNoteBox(k,nTitle,nText,nStarred,nEditTime,nCreateTime){//Function
 	form.appendChild(submitInput);
 	buttonsDiv.appendChild(form);
 	noteBoxDiv.appendChild(buttonsDiv);
+	noteBoxDiv.appendChild(imgDiv);
 	labAddDiv.appendChild(labIn);
 	labAddDiv.appendChild(addLabSpan);
 	noteBoxDiv.appendChild(labAddDiv);
@@ -125,10 +132,12 @@ function createNoteBox(k,nTitle,nText,nStarred,nEditTime,nCreateTime){//Function
 	form.setAttribute("id","form"+k);
 	imgSpan.setAttribute("id","imgUpload"+k);
 	fileUploadInput.setAttribute("id","fileToUpload"+k);
+	submitInput.setAttribute("id","submitInput"+k);
 	delSpan.setAttribute("id","del"+k);
 	labIn.setAttribute("id","labIn"+k);
 	addLabSpan.setAttribute("id","addLabel"+k);
 	labelDiv.setAttribute("id","labelDiv"+k);
+	imgDiv.setAttribute("id","imgDiv"+k);
 	editTimeDiv.setAttribute("id","editTime"+k);
 	createTimeDiv.setAttribute("id","createTime"+k);
 
@@ -146,13 +155,14 @@ function createNoteBox(k,nTitle,nText,nStarred,nEditTime,nCreateTime){//Function
 	labIn.setAttribute("class","labInClass");
 	addLabSpan.setAttribute("class","fa fa-plus-square fa-1x");
 	labelDiv.setAttribute("class","labelDivClass");
+	imgDiv.setAttribute("class","imgDivClass");
 	editTimeDiv.setAttribute("class","editTimeClass");
 	createTimeDiv.setAttribute("class","createTimeClass");
 
 	//Setting other attributes
 	starSpan.setAttribute("onclick","starClick(this)");
 	editSpan.setAttribute("onclick","editClick(this)");
-	form.setAttribute("action","upload.php");
+	form.setAttribute("action","notes.php");
 	form.setAttribute("method","post");
 	form.setAttribute("enctype","multipart/form-data");
 	imgSpan.setAttribute("onclick","imgUploadClick(this)");
@@ -161,8 +171,9 @@ function createNoteBox(k,nTitle,nText,nStarred,nEditTime,nCreateTime){//Function
 	fileUploadInput.setAttribute("accept","image/*");
 	fileUploadInput.setAttribute("style","display:none");
 	submitInput.setAttribute("type","submit");
-	submitInput.setAttribute("value","Upload Image");
+	submitInput.setAttribute("value","Upload"+k);
 	submitInput.setAttribute("name","submit");
+	submitInput.setAttribute("style","display:none");
 	delSpan.setAttribute("onclick","delClick(this)");
 	labIn.setAttribute("type","text");
 	labIn.setAttribute("name","label");
@@ -250,9 +261,12 @@ function imgUploadClick(imgUp){
 	k=imgUp.getAttribute("id")[9];
 	document.getElementById("fileToUpload"+k).click();
 
+	document.getElementById("submitInput"+k).setAttribute("style","display:inline");
+
 	document.getElementById("fileToUpload"+k).onchange = function() {
     	document.getElementById("form"+k).submit();
 	};
+
 
 }
 
@@ -411,6 +425,32 @@ function labelNavbarAppend(){
 
 			labelLink.setAttribute("class","sidenavlinks labelLinks");
 		}	
+	}
+}
+
+function imgsInit(k,filePathFull){//Function that attachs images to notebox
+
+	var filePathArray = new Array();
+	filePathArray = filePathFull.split(" ");
+
+	for(t=0;t<filePathArray.length-1;t++){
+		
+		imgArray[k]++;
+
+		filePath = filePathArray[t];
+
+		if(filePath.width!=0){
+
+			var img = document.createElement("img");
+			document.getElementById("imgDiv"+k).appendChild(img);
+
+			img.setAttribute("src",filePath);
+			img.setAttribute("id",k+"img"+imgArray[k]);
+			img.setAttribute("class","imgClass");	
+			img.setAttribute("alt","note");
+
+		}	
+		
 	}
 }
 
