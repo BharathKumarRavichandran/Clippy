@@ -1,11 +1,13 @@
 var i=0;
 var j=0;
 var t=0;
+var u=0;
 var k=0;
 var notes=0;
 var data;
 var exist;
 var allowed=false;
+var len=0;
 var labelTextInit ="";
 
 var labels = new Array();
@@ -360,6 +362,7 @@ function newLabel(y,event,l){
 		document.getElementById("sidenav").appendChild(labelLink);
 
 		labelLink.setAttribute("class","sidenavlinks labelLinks");
+		labelLink.setAttribute("onclick","labelView(this)");
 		
 		addLabelDb(k);	
 
@@ -459,7 +462,7 @@ function labelView(y){
 	}
 
 	var labelLinkText = y.innerHTML;
-
+	
 	var params="";
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function(){
@@ -469,13 +472,15 @@ function labelView(y){
 		
 				if(typeof(labels[t])!=='undefined'&&labels[t].length>0){
 					exist = true;
+					len = labels[t].length;
 				}
 				else{
 					exist = false;
+					len=0;
 				}
 
 				if(exist==true){
-					for(j=0;j<labels[t].length;j++){
+					for(j=0;j<len;j++){
 						if(labelLinkText==labels[t][j]){
 							allowed = true;
 						}
@@ -483,9 +488,11 @@ function labelView(y){
 							createNoteBox(data[t-1].NoteNumber,data[t-1].Title,data[t-1].NoteText,data[t-1].Starred,data[t-1].EditTime,data[t-1].CreateTime);
 				    		labelInit(data[t-1].NoteNumber,data[t-1].Labels);
 			    			imgsInit(data[t-1].NoteNumber,data[t-1].ImgPath);
+			    			allowed=false;
 			    		}	
 					}
 				}
+				exist = false;
 			}
 		}	
 	};
@@ -500,11 +507,11 @@ function imgsInit(k,filePathFull){//Function that attachs images to notebox
 	var filePathArray = new Array();
 	filePathArray = filePathFull.split(" ");
 
-	for(t=0;t<filePathArray.length-1;t++){
+	for(u=0;u<filePathArray.length-1;u++){
 		
 		imgArray[k]++;
 
-		filePath = filePathArray[t];
+		filePath = filePathArray[u];
 
 		if(filePath.width!=0){
 
