@@ -10,27 +10,59 @@ $tablename = "collaborations";
 
 if($_SERVER['REQUEST_METHOD']=="POST"){
 
-	$sql = "USE clippy;";
-	$conn->query($sql);
-	
-	$sql = "SELECT * FROM $tablename WHERE username = '$username';";
-	$result = $conn->query($sql);
+	if($_POST["permission"]=="admin"){
 
-	if (!$result) {
-    	trigger_error('Invalid query: ' . $conn->error);
+		$sql = "USE clippy;";
+		$conn->query($sql);
+		
+		$sql = "SELECT * FROM $tablename WHERE username = '$username';";
+		$result = $conn->query($sql);
+
+		if (!$result) {
+	    	trigger_error('Invalid query: ' . $conn->error);
+		}	
+
+		$adminCollabsData = array();
+
+		if($result->num_rows>0){
+			while($row = $result->fetch_assoc()){
+
+				$r = array('TaskNumber'=>$row["TaskNumber"],'CollabsUsername'=>$row["CollabsUsername"]);
+
+				array_push($adminCollabsData,$r);
+			}
+		}	
+		echo json_encode($adminCollabsData);
+
 	}	
 
-	$adminCollabsData = array();
+	if($_POST["permission"]=="others"){
 
-	if($result->num_rows>0){
-		while($row = $result->fetch_assoc()){
+		$username = $_POST["userName"];
 
-			$r = array('TaskNumber'=>$row["TaskNumber"],'CollabsUsername'=>$row["CollabsUsername"]);
+		$sql = "USE clippy;";
+		$conn->query($sql);
+		
+		$sql = "SELECT * FROM $tablename WHERE username = '$username';";
+		$result = $conn->query($sql);
 
-			array_push($adminCollabsData,$r);
-		}
+		if (!$result) {
+	    	trigger_error('Invalid query: ' . $conn->error);
+		}	
+
+		$adminCollabsData = array();
+
+		if($result->num_rows>0){
+			while($row = $result->fetch_assoc()){
+
+				$r = array('TaskNumber'=>$row["TaskNumber"],'CollabsUsername'=>$row["CollabsUsername"]);
+
+				array_push($adminCollabsData,$r);
+			}
+		}	
+		echo json_encode($adminCollabsData);
 	}	
-	echo json_encode($adminCollabsData);
+
 }	
 
 ?>	
