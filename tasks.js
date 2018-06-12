@@ -1,6 +1,7 @@
 var i=0;
 var k=0;
 var task=0;
+var b;
 var colArray = new Array();
 
 if (window.XMLHttpRequest) {
@@ -86,12 +87,14 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 	//create text nodes for the above elements
 	var taskText = document.createTextNode(tText);
 	var btnText = document.createTextNode("Add Collaborators");
+	var colDivUsersText = document.createTextNode("Collaborators :");
 	var editTimeText = document.createTextNode(tEditTime);
 	var createTimeText = document.createTextNode(tCreateTime);
 
 	//Appending textnodes
 	taskSpan.appendChild(taskText);
 	colButton.appendChild(btnText);
+	colDivUsers.appendChild(colDivUsersText);
 	editTimeDiv.appendChild(editTimeText);
 	createTimeDiv.appendChild(createTimeText);
 
@@ -176,6 +179,10 @@ function createCollaborators(z){
 	var uname = document.getElementById("colInput"+k).value;
 
 	addCollaborators(k,uname);	
+	addCollabsDb(k,uname);
+
+	document.getElementById("colInput"+k).value="";
+	document.getElementById("colInput"+k).setAttribute("placeholder","Username");
 }
 
 function addCollaborators(k,uname){
@@ -191,10 +198,6 @@ function addCollaborators(k,uname){
 	colSpan.setAttribute("id",k+"collab"+colArray[k]);
 	colSpan.setAttribute("class","colSpanClass"); 
 
-	addCollabsDb(k,uname);
-
-	document.getElementById("colInput"+k).value="";
-	document.getElementById("colInput"+k).setAttribute("placeholder","Username");
 }
 
 function addCollabsDb(taskNumber,uname){
@@ -215,7 +218,8 @@ function getAdminCollabsData(){
 	var q=0;
 	var collabsData;
 	var userNameArr = new Array();
-	var params="";
+	var permission = "admin";
+	var params = "permission="+permission;
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function(){
 	    if(this.readyState==4&&this.status==200){	
@@ -243,7 +247,6 @@ function getOtherCollabsData(){
 	xmlhttp.onreadystatechange = function(){
 	    if(this.readyState==4&&this.status==200){	
 	    	collabsData = JSON.parse(this.responseText);
-	
 	    	for(p=0;p<collabsData.length;p++){
 				userName = collabsData[p].username;
 				getCollabsData(userName,collabsData[p].TaskNumber);
@@ -261,6 +264,7 @@ function getCollabsData(userName,taskNumber){
 	var url="getCollabsData.php";
 	var purpose = "getCollabsData";
 	var params = "userName="+userName+"&taskNumber="+taskNumber+"&purpose="+purpose;
+	var b=task+1;
 
 	xmlhttp.onreadystatechange = function(){
 	    if(this.readyState==4&&this.status==200){
@@ -269,12 +273,38 @@ function getCollabsData(userName,taskNumber){
 	    		task++;
 	    		createBox(task,collabsData[i].Checked,collabsData[i].TaskText,collabsData[i].Starred,collabsData[i].EditTime,collabsData[i].CreateTime);
 	    	}		
-	    }
+	    	 getCollabsUserData(userName,b);
+	    }	    				
 	};
 
 	xmlhttp.open('POST',url,true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);		
+
+}
+
+function getCollabsUserData(userName,b){
+
+	var p=0;
+	var q=0;
+	var collabsData;
+	var userNameGet;
+	var permission = "others";
+	var params = "permission="+permission+"&userName="+userName;
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){	
+	    	collabsData = JSON.parse(this.responseText);
+	    	for(p=0;p<collabsData.length;p++){
+				userNameGet = collabsData[p].CollabsUsername;
+				addCollaborators(b,userNameGet);
+				b++;
+	    	}
+	    }
+	};
+	xmlhttp.open("POST","getAdminCollabsData.php",true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
 
 }
 

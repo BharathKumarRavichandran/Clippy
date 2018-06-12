@@ -251,12 +251,17 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			margin-top: 1%;
 			padding: 5px;
 			padding-bottom: 0px;
+			font-family: "sans-serif";
+			font-style: italic;
+			font-size: 1.3em;
+			font-weight: 900;
 		}
 
 		.colSpanClass{
 			font-family: "Trebuchet MS";
 			font-style: italic;
 			font-size: 1em;
+			font-weight: normal;
 			padding: 5px;
 			margin-left: 4px;
 			margin-right: 4px;
