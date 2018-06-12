@@ -1,7 +1,7 @@
 var i=0;
 var k=0;
 var task=0;
-var b;
+var b=0;
 var colArray = new Array();
 
 if (window.XMLHttpRequest) {
@@ -264,16 +264,15 @@ function getCollabsData(userName,taskNumber){
 	var url="getCollabsData.php";
 	var purpose = "getCollabsData";
 	var params = "userName="+userName+"&taskNumber="+taskNumber+"&purpose="+purpose;
-	var b=task+1;
 
 	xmlhttp.onreadystatechange = function(){
 	    if(this.readyState==4&&this.status==200){
 	    	collabsData = JSON.parse(this.responseText);
 	    	for(i=0;i<collabsData.length;i++){
-	    		task++;
-	    		createBox(task,collabsData[i].Checked,collabsData[i].TaskText,collabsData[i].Starred,collabsData[i].EditTime,collabsData[i].CreateTime);
+	    		b--;
+	    		createBox(b,collabsData[i].Checked,collabsData[i].TaskText,collabsData[i].Starred,collabsData[i].EditTime,collabsData[i].CreateTime);
 	    	}		
-	    	 getCollabsUserData(userName,b);
+	    	 getCollabsUserData(userName);
 	    }	    				
 	};
 
@@ -283,7 +282,7 @@ function getCollabsData(userName,taskNumber){
 
 }
 
-function getCollabsUserData(userName,b){
+function getCollabsUserData(userName){
 
 	var p=0;
 	var q=0;
@@ -298,7 +297,6 @@ function getCollabsUserData(userName,b){
 	    	for(p=0;p<collabsData.length;p++){
 				userNameGet = collabsData[p].CollabsUsername;
 				addCollaborators(b,userNameGet);
-				b++;
 	    	}
 	    }
 	};
