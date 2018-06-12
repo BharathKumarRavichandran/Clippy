@@ -1,6 +1,7 @@
 var i=0;
 var k=0;
 var task=0;
+var colArray = new Array();
 
 if (window.XMLHttpRequest) {
   	xmlhttp = new XMLHttpRequest();
@@ -18,7 +19,7 @@ document.getElementById("taskInput").addEventListener("keyup",function(event){//
 },false);
 
 function initialise(){//Function to get stored task data in database and to create task boxes
-	
+
 	var params="";
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function(){
@@ -28,12 +29,14 @@ function initialise(){//Function to get stored task data in database and to crea
 	    		task++;
 	    		createBox(data[i].TaskNumber,data[i].Checked,data[i].TaskText,data[i].Starred,data[i].EditTime,data[i].CreateTime);
 	    	}
+	    	getAdminCollabsData();
 	    }
 	};
 	xmlhttp.open("POST","getTaskData.php",true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);
 
+	getOtherCollabsData();
 }
 
 function newTask(){//Function to collect current task data to call box creating and data storing function
@@ -64,6 +67,8 @@ function newTask(){//Function to collect current task data to call box creating 
 
 function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function to create all nodes and to add task box
 
+	colArray[k]=0;
+
 	var divBox = document.createElement("div");
 	var checkboxSpan = document.createElement("span");
 	var checkbox = document.createElement("input");
@@ -71,16 +76,22 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 	var starSpan = document.createElement("span");
 	var editSpan = document.createElement("span");
 	var delSpan = document.createElement("span");
+	var colDiv = document.createElement("div");
+	var colInput = document.createElement("input");
+	var colButton = document.createElement("button");
+	var colDivUsers = document.createElement("div"); 
 	var editTimeDiv = document.createElement("div");
 	var createTimeDiv = document.createElement("div"); 
 
 	//create text nodes for the above elements
 	var taskText = document.createTextNode(tText);
+	var btnText = document.createTextNode("Add Collaborators");
 	var editTimeText = document.createTextNode(tEditTime);
 	var createTimeText = document.createTextNode(tCreateTime);
 
 	//Appending textnodes
 	taskSpan.appendChild(taskText);
+	colButton.appendChild(btnText);
 	editTimeDiv.appendChild(editTimeText);
 	createTimeDiv.appendChild(createTimeText);
 
@@ -91,6 +102,10 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 	divBox.appendChild(delSpan);
 	divBox.appendChild(editSpan);
 	divBox.appendChild(starSpan);
+	colDiv.appendChild(colInput);
+	colDiv.appendChild(colButton);
+	divBox.appendChild(colDiv);
+	divBox.appendChild(colDivUsers);
 	divBox.appendChild(editTimeDiv);
 	divBox.appendChild(createTimeDiv);
 	document.getElementById("taskRegion").appendChild(divBox);
@@ -102,6 +117,10 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 	starSpan.setAttribute("id","star"+k);
 	editSpan.setAttribute("id","edit"+k);
 	delSpan.setAttribute("id","del"+k);
+	colDiv.setAttribute("id","colDiv"+k);
+	colInput.setAttribute("id","colInput"+k);
+	colButton.setAttribute("id","colButton"+k);
+	colDivUsers.setAttribute("id","colDivUsers"+k);
 	editTimeDiv.setAttribute("id","editTime"+k);
 	createTimeDiv.setAttribute("id","createTime"+k);
 
@@ -112,16 +131,17 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 	starSpan.setAttribute("class", "fa fa-star fa-2x");
 	editSpan.setAttribute("class", "fa fa-edit fa-2x");
 	delSpan.setAttribute("class", "fa fa-trash-o fa-2x");
+	colDivUsers.setAttribute("class","colDivUsersClass");
 	editTimeDiv.setAttribute("class", "editTimeClass");
 	createTimeDiv.setAttribute("class", "createTimeClass");
 
 	//Striking out if the checkbox is checked
 	if(tChecked=="yes"){
-		divBox.style.textDecoration ="line-through";
+		taskSpan.style.textDecoration ="line-through";
 		document.getElementById("taskStatus"+k).checked = true;
 	}
 	else{
-		divBox.style.textDecoration ="none";
+		taskSpan.style.textDecoration ="none";
 	}
 
 	divBox.style.background = "orange";
@@ -138,6 +158,123 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 	starSpan.setAttribute("onclick","starClick(this)");
 	editSpan.setAttribute("onclick","editClick(this)");
 	delSpan.setAttribute("onclick","delClick(this)");
+	colButton.setAttribute("onclick","createCollaborators(this)");
+
+	colInput.setAttribute("placeholder","Username");
+
+	colInput.addEventListener("keyup",function(event){
+		if(event.keyCode==13){//enter keyCode
+			createCollaborators(this);
+		}
+	},false);
+
+}
+
+function createCollaborators(z){
+
+	k=z.getAttribute("id")[8];
+	var uname = document.getElementById("colInput"+k).value;
+
+	addCollaborators(k,uname);	
+}
+
+function addCollaborators(k,uname){
+
+	colArray[k]++;
+
+	var colSpan = document.createElement("span");	
+	var colNameText = document.createTextNode(uname);
+
+	colSpan.appendChild(colNameText);
+	document.getElementById("colDivUsers"+k).appendChild(colSpan);
+
+	colSpan.setAttribute("id",k+"collab"+colArray[k]);
+	colSpan.setAttribute("class","colSpanClass"); 
+
+	addCollabsDb(k,uname);
+
+	document.getElementById("colInput"+k).value="";
+	document.getElementById("colInput"+k).setAttribute("placeholder","Username");
+}
+
+function addCollabsDb(taskNumber,uname){
+
+	var url="tasks.php";
+	var purpose = "addCollabs";
+	var params = "taskNumber="+taskNumber+"&uname="+uname+"&purpose="+purpose;
+	
+	xmlhttp.open('POST',url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
+
+}
+
+function getAdminCollabsData(){
+
+	var p=0;
+	var q=0;
+	var collabsData;
+	var userNameArr = new Array();
+	var params="";
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){	
+	    	collabsData = JSON.parse(this.responseText);
+	    			
+	    	for(p=0;p<collabsData.length;p++){
+				userNameArr = collabsData[p].CollabsUsername;
+				addCollaborators(collabsData[p].TaskNumber,userNameArr);
+	    	}
+	    }
+	};
+	xmlhttp.open("POST","getAdminCollabsData.php",true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
+}
+
+function getOtherCollabsData(){
+
+	var p=0;
+	var q=0;
+	var collabsData;
+	var userName;
+	var params="";
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){	
+	    	collabsData = JSON.parse(this.responseText);
+	
+	    	for(p=0;p<collabsData.length;p++){
+				userName = collabsData[p].username;
+				getCollabsData(userName,collabsData[p].TaskNumber);
+	    	}
+	    }
+	};
+	xmlhttp.open("POST","getOtherCollabsData.php",true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
+}
+
+function getCollabsData(userName,taskNumber){
+	
+	var collabsData;
+	var url="getCollabsData.php";
+	var purpose = "getCollabsData";
+	var params = "userName="+userName+"&taskNumber="+taskNumber+"&purpose="+purpose;
+
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){
+	    	collabsData = JSON.parse(this.responseText);
+	    	for(i=0;i<collabsData.length;i++){
+	    		task++;
+	    		createBox(task,collabsData[i].Checked,collabsData[i].TaskText,collabsData[i].Starred,collabsData[i].EditTime,collabsData[i].CreateTime);
+	    	}		
+	    }
+	};
+
+	xmlhttp.open('POST',url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);		
 
 }
 
@@ -146,11 +283,11 @@ function checkboxClick(button){//Function to respond to user's checkbox click
 	k=button.getAttribute("id")[10];
 
 	if(button.checked==true){
-		document.getElementById("taskBox"+k).style.textDecoration ="line-through";
+		document.getElementById("taskText"+k).style.textDecoration ="line-through";
 	}
 
 	else{
-		document.getElementById("taskBox"+k).style.textDecoration ="none";
+		document.getElementById("taskText"+k).style.textDecoration ="none";
 	}
 
 	editTaskDb(k);

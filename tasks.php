@@ -8,7 +8,9 @@ if(!isset($_SESSION["username"])){
 	header('Location: welcome.html');
 	exit();
 }
-include("createDataTable.php");
+
+include_once("createDataTable.php");
+include_once("createCollabsTable.php");
 
 $username = $_SESSION["username"];
 $tablename = $username."tasks";
@@ -49,6 +51,15 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		$sql = "DELETE FROM $tablename WHERE TaskNumber = $taskNumber;";
 		$conn->query($sql);
 
+	}
+
+	else if($_POST["purpose"]=="addCollabs"){
+
+		$taskNumber = $_POST['taskNumber'];
+		$uname = $_POST['uname'];
+		
+		$sql = "INSERT INTO Collaborations(username,TaskNumber,CollabsUsername) "."VALUES('$username','$taskNumber','$uname');";
+		$conn->query($sql);
 	}
 
 }
@@ -234,6 +245,24 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
 		.checked{
     		color: red;
+		}
+
+		.colDivUsersClass{
+			margin-top: 1%;
+			padding: 5px;
+			padding-bottom: 0px;
+		}
+
+		.colSpanClass{
+			font-family: "Trebuchet MS";
+			font-style: italic;
+			font-size: 1em;
+			padding: 5px;
+			margin-left: 4px;
+			margin-right: 4px;
+			background: lightgrey;
+			border-radius: 5px;
+			border-style: outset;
 		}
 
 		.editTimeClass{
