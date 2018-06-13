@@ -488,11 +488,9 @@ function editClick(edit){//Function that allows user to edit the contents of the
 
 	k=edit.getAttribute("id")[4];
 	if(k=="-"){
-		console.log(k);
 		k="-"+edit.getAttribute("id")[5];;
 	}
 
-	console.log(k);
 	if(document.getElementById("edit"+k).getAttribute("class")=="fa fa-edit fa-2x"){
 		document.getElementById("taskText"+k).setAttribute("contentEditable",true);
 		document.getElementById("edit"+k).setAttribute("class","fa fa-check-circle fa-2x");	
@@ -500,8 +498,15 @@ function editClick(edit){//Function that allows user to edit the contents of the
 	else{
 		document.getElementById("taskText"+k).setAttribute("contentEditable",false);
 		document.getElementById("edit"+k).setAttribute("class","fa fa-edit fa-2x");
-		editTaskDb(k);
-	}	
+
+		if(edit.getAttribute("id")[4]!="-"){
+			editTaskDb(k);
+		}
+		else{
+			editTaskDb2(k);
+		}
+	}
+
 
 }
 
