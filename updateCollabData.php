@@ -19,12 +19,11 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
 	if(!isset($_POST["k"])){
 
-		$un = $_POST["un"];
-		$taskNumber = $_POST["unum"];
-		$tablename = $un."tasks";
-
 		if($_POST["purpose"]=="edit"){
 
+			$un = $_POST["un"];//Username
+			$taskNumber = $_POST["unum"];//Note number
+			$tablename = $un."tasks";
 			$checked = $_POST['checked'];
 			$taskText = $_POST['taskText'];
 			$starred = $_POST['starred'];
@@ -37,13 +36,18 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
 		else if($_POST["purpose"]=="delete"){
 
-			$sql = "DELETE FROM $tablename WHERE TaskNumber = $taskNumber;";
+			$uname = $_POST['un'];
+			$taskNumber = $_POST["unum"];//Note number
+
+			$sql = "DELETE FROM Collaborations WHERE TaskNumber = $taskNumber AND CollabsUsername = '$uname';";
 			$conn->query($sql);
 
 		}
 
 		else if($_POST["purpose"]=="addCollabs"){
 
+			$un = $_POST["un"];//Username
+			$taskNumber = $_POST["unum"];//Note number
 			$uname = $_POST['uname'];
 			
 			$sql = "INSERT INTO Collaborations(username,TaskNumber,CollabsUsername) "."VALUES('$username','$taskNumber','$uname');";

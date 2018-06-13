@@ -74,11 +74,11 @@ function newTask(){//Function to collect current task data to call box creating 
 
 function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function to create all nodes and to add task box
 
-	if(k>0){
+	if(k>0&&document.getElementById("nothing1")){
 		document.getElementById("nothing1").remove();
 	}
 
-	else{
+	else if(k<0&&document.getElementById("nothing2")){
 		document.getElementById("nothing2").remove();
 	}
 
@@ -259,17 +259,23 @@ function addCollaborators(k,uname){
 
 	var colSpan = document.createElement("span");	
 	var colNameText = document.createTextNode(uname);
-	var colCloseSpan = document.createElement("span");
+	if(k>0){
+		var colCloseSpan = document.createElement("span");
+	}	
 
 	colSpan.appendChild(colNameText);
-	colSpan.appendChild(colCloseSpan);
+	if(k>0){
+		colSpan.appendChild(colCloseSpan);
+	}
 	document.getElementById("colDivUsers"+k).appendChild(colSpan);
 
 	colSpan.setAttribute("id",k+"collab"+colArray[k]);
-	colCloseSpan.setAttribute("id",k+"colClose"+colArray[k]);
 	colSpan.setAttribute("class","colSpanClass"); 
-	colCloseSpan.setAttribute("class","fa fa-window-close");
-	colCloseSpan.setAttribute("onclick","collaboratorDelete(this)");
+	if(k>0){
+		colCloseSpan.setAttribute("id",k+"colClose"+colArray[k]);	
+		colCloseSpan.setAttribute("class","fa fa-window-close");
+		colCloseSpan.setAttribute("onclick","collaboratorDelete(this)");
+	}
 
 }
 
@@ -278,12 +284,19 @@ function collaboratorDelete(del){
 	k=del.getAttribute("id")[0];
 	l=del.getAttribute("id")[9];
 
-	if(k=="-"){
-		k+=del.getAttribute("id")[1];
-		l=del.getAttribute("id")[11];
-	}
+	var taskNumber = k;
+	var url="updateCollabData.php";
+	var purpose = "delete";
+	var un = document.getElementById(k+"collab"+l).textContent;
+	var unum = k;
+	var params = "un="+un+"&unum="+unum+"&taskNumber="+taskNumber+"&purpose="+purpose;	
+
+	xmlhttp.open('POST',url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
 
 	document.getElementById(k+"collab"+l).remove();
+
 }
 
 function addCollabsDb(taskNumber,uname){
@@ -378,12 +391,15 @@ function getCollabsData(userName,taskNumber){
 
 	xmlhttp.onreadystatechange = function(){
 	    if(this.readyState==4&&this.status==200){
+	    	console.log("hey");
 		    	collabsData = JSON.parse(this.responseText);
+		    	console.log(collabsData);
 		    	for(i=0;i<collabsData.length;i++){
 		    		b--;
 		    		permission="others";
 		    		cusername=userName;
 		    		ctasknumber=taskNumber;
+		    		console.log(b);
 		    		createBox(b,collabsData[i].Checked,collabsData[i].TaskText,collabsData[i].Starred,collabsData[i].EditTime,collabsData[i].CreateTime);
 		    	}		
 		    	getCollabsUserData(userName);
@@ -622,8 +638,6 @@ function delClick(del){//Function to delete a task
 	xmlhttp.send(params);
 
 	document.getElementById("taskBox"+k).remove();
-
-	console.log(taskRegion.firstChild);
 
 	if(taskRegion.hasChildNodes.length<=0&&(!document.getElementById("nothing1"))){ //To add "Nothing to show"
 
