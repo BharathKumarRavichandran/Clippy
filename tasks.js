@@ -1,5 +1,6 @@
 var i=0;
 var k=0;
+var l=0;
 var task=0;
 var b=0;
 var permission;
@@ -270,6 +271,19 @@ function addCollaborators(k,uname){
 	colCloseSpan.setAttribute("class","fa fa-window-close");
 	colCloseSpan.setAttribute("onclick","collaboratorDelete(this)");
 
+}
+
+function collaboratorDelete(del){
+
+	k=del.getAttribute("id")[0];
+	l=del.getAttribute("id")[9];
+
+	if(k=="-"){
+		k+=del.getAttribute("id")[1];
+		l=del.getAttribute("id")[11];
+	}
+
+	document.getElementById(k+"collab"+l).remove();
 }
 
 function addCollabsDb(taskNumber,uname){
