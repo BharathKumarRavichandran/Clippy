@@ -296,6 +296,13 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			margin-left: 44%;
 		}
 
+		.nothing{
+			color: red;
+			margin-left: 47%;
+			font-family: "Sofia";
+			font-size: 1.5em;
+		}
+
 		@media screen and (max-height: 450px) {
 		    .sidenav {
 		    	padding-top: 15px;
@@ -330,9 +337,11 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			<option value="remaining">Remaining</option>
 		</select>
 	</div>
+	<div id="nothing1" class="main nothing">Nothing to show </div>
 	<div id="taskRegion" class="main taskRegionClass">
 	</div>
 	<div id="colListsName" class="main">Non-Admin Collaborated Lists :</div>
+	<div id="nothing2" class="main nothing">Nothing to show </div>
 	<div id="taskRegion2" class="main taskRegionClass2">
 	</div>	
 <script type="text/javascript">

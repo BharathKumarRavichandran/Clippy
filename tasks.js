@@ -73,6 +73,14 @@ function newTask(){//Function to collect current task data to call box creating 
 
 function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function to create all nodes and to add task box
 
+	if(k>0){
+		document.getElementById("nothing1").remove();
+	}
+
+	else{
+		document.getElementById("nothing2").remove();
+	}
+
 	colArray[k]=0;
 
 	var divBox = document.createElement("div");
@@ -595,6 +603,34 @@ function delClick(del){//Function to delete a task
 	xmlhttp.send(params);
 
 	document.getElementById("taskBox"+k).remove();
+
+	console.log(taskRegion.firstChild);
+
+	if(taskRegion.hasChildNodes.length<=0&&(!document.getElementById("nothing1"))){ //To add "Nothing to show"
+
+    	var nothDiv = document.createElement("div");
+    	var nothDivText = document.createTextNode("Nothing to show");
+
+    	nothDiv.appendChild(nothDivText);
+
+    	nothDiv.setAttribute("id","nothing1");
+    	nothDiv.setAttribute("class","main nothing");
+
+    	document.getElementById("taskRegion").insertBefore(nothDiv,null);
+	}
+
+	if(taskRegion2.hasChildNodes.length<=0&&(!document.getElementById("nothing2"))){ //To add "Nothing to show"
+
+    	var nothDiv = document.createElement("div");
+    	var nothDivText = document.createTextNode("Nothing to show");
+
+    	nothDiv.appendChild(nothDivText);
+
+    	nothDiv.setAttribute("id","nothing2");
+    	nothDiv.setAttribute("class","main nothing");
+
+    	document.getElementById("taskRegion2").insertBefore(nothDiv,null);
+	}	
 
 }
 
