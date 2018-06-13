@@ -233,7 +233,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			padding: 15px;
 		}
 
-		.fa{
+		.fa-2x{
 			float: right;
 			padding: 5px;
 			padding-left: 10px;
@@ -242,6 +242,11 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
 		.fa-star{
 			color: grey;
+		}
+
+		.fa-window-close{
+			padding: 10px;
+			padding-right: 3px;
 		}
 
 		.checked{

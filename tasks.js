@@ -258,12 +258,17 @@ function addCollaborators(k,uname){
 
 	var colSpan = document.createElement("span");	
 	var colNameText = document.createTextNode(uname);
+	var colCloseSpan = document.createElement("span");
 
 	colSpan.appendChild(colNameText);
+	colSpan.appendChild(colCloseSpan);
 	document.getElementById("colDivUsers"+k).appendChild(colSpan);
 
 	colSpan.setAttribute("id",k+"collab"+colArray[k]);
+	colCloseSpan.setAttribute("id",k+"colClose"+colArray[k]);
 	colSpan.setAttribute("class","colSpanClass"); 
+	colCloseSpan.setAttribute("class","fa fa-window-close");
+	colCloseSpan.setAttribute("onclick","collaboratorDelete(this)");
 
 }
 
