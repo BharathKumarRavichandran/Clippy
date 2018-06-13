@@ -308,6 +308,14 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			font-size: 1.5em;
 		}
 
+		.adminDivClass{
+			margin-top: 3%;
+			font-family: "Comic Sans MS";
+			font-size: 1.1em;
+			font-weight: 900;
+			color: darkblue;
+		}
+
 		@media screen and (max-height: 450px) {
 		    .sidenav {
 		    	padding-top: 15px;

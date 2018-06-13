@@ -30,7 +30,11 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			$editTime = $_POST['editTime'];
 
 			$sql = "UPDATE $tablename SET Checked='$checked', TaskText='$taskText', Starred='$starred', EditTime='$editTime' WHERE TaskNumber = $taskNumber;";
-			$conn->query($sql);
+			$result = $conn->query($sql);
+
+			if (!$result) {
+	    		trigger_error('Invalid query: ' . $conn->error);
+			}
 
 		}
 
@@ -40,7 +44,25 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			$taskNumber = $_POST["unum"];//Note number
 
 			$sql = "DELETE FROM Collaborations WHERE TaskNumber = $taskNumber AND CollabsUsername = '$uname';";
-			$conn->query($sql);
+			$result = $conn->query($sql);
+
+			if (!$result) {
+	    		trigger_error('Invalid query: ' . $conn->error);
+			}
+
+		}
+
+		else if($_POST["purpose"]=="deleteBox"){
+
+			$uname = $_POST['un'];
+			$taskNumber = $_POST["unum"];//Note number
+
+			$sql = "DELETE FROM Collaborations WHERE TaskNumber = $taskNumber AND username = '$uname';";
+			$result = $conn->query($sql);
+
+			if (!$result) {
+	    		trigger_error('Invalid query: ' . $conn->error);
+			}
 
 		}
 
@@ -51,7 +73,12 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			$uname = $_POST['uname'];
 			
 			$sql = "INSERT INTO Collaborations(username,TaskNumber,CollabsUsername) "."VALUES('$username','$taskNumber','$uname');";
-			$conn->query($sql);
+			$result = $conn->query($sql);
+
+			if (!$result) {
+	    		trigger_error('Invalid query: ' . $conn->error);
+			}
+
 		}
 
 	}

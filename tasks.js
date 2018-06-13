@@ -8,6 +8,7 @@ var cusername="";
 var ctasknumber=0;
 var colArray = new Array();
 
+var xmlhttp;
 if (window.XMLHttpRequest) {
   	xmlhttp = new XMLHttpRequest();
 } 
@@ -26,7 +27,13 @@ document.getElementById("taskInput").addEventListener("keyup",function(event){//
 function initialise(){//Function to get stored task data in database and to create task boxes
 
 	var params="";
-	var xmlhttp = new XMLHttpRequest();
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  	xmlhttp = new XMLHttpRequest();
+	} 
+	else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 	xmlhttp.onreadystatechange = function(){
 	    if(this.readyState==4&&this.status==200){
 	    	var data = JSON.parse(this.responseText);			
@@ -91,46 +98,65 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 	var starSpan = document.createElement("span");
 	var editSpan = document.createElement("span");
 	var delSpan = document.createElement("span");
-	var	colDiv = document.createElement("div");
-	var	colInput = document.createElement("input");
-	var	colButton = document.createElement("button");	
-	var colDivUsers = document.createElement("div"); 
+	var	colDiv;
+	var	colInput;
+	var	colButton;	
+	var colDivUsers;
+	if(k>0){
+		colDiv = document.createElement("div");
+		colInput = document.createElement("input");
+		colButton = document.createElement("button");	
+		colDivUsers = document.createElement("div"); 
+	}	
 	var editTimeDiv = document.createElement("div");
 	var createTimeDiv = document.createElement("div");
-
 	var cDiv;
 	var cUSpan;
 	var cNSpan;
+	var adminDiv;
 	if(k<0){
 		cDiv = document.createElement("div");
 		cUSpan = document.createElement("span");
 		cNSpan = document.createElement("span");
-	} 
+		adminDiv = document.createElement("div"); 
+	}
 
+	
 	//create text nodes for the above elements
 	var taskText = document.createTextNode(tText);
-	var	btnText = document.createTextNode("Add Collaborators");	
-	var colDivUsersText = document.createTextNode("Collaborators :");
+	var	btnText;	
+	var colDivUsersText;
+	if(k>0){
+		var	btnText = document.createTextNode("Add Collaborators");	
+		var colDivUsersText = document.createTextNode("Collaborators :");	
+	}
 	var editTimeText = document.createTextNode(tEditTime);
 	var createTimeText = document.createTextNode(tCreateTime);
 
 	var cDivText;
 	var cUSpanText;
 	var cNSpanText;
+	var adminDivText;
 	if(k<0){
 		cUSpanText = document.createTextNode(cusername);
 		cNSpanText = document.createTextNode(ctasknumber);
+		adminDivText = document.createTextNode("ADMIN : "+cusername);
 	} 
+
 
 	//Appending textnodes
 	taskSpan.appendChild(taskText);
-	colButton.appendChild(btnText);
-	colDivUsers.appendChild(colDivUsersText);
+	if(k>0){
+		colButton.appendChild(btnText);
+		colDivUsers.appendChild(colDivUsersText);	
+	}
+	
 	editTimeDiv.appendChild(editTimeText);
 	createTimeDiv.appendChild(createTimeText);
 	if(k<0){
 		cUSpan.appendChild(cUSpanText);
 		cNSpan.appendChild(cNSpanText);
+		adminDiv.appendChild(adminDivText);
 	}
 
 	//Appending childnodes
@@ -140,16 +166,19 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 	divBox.appendChild(delSpan);
 	divBox.appendChild(editSpan);
 	divBox.appendChild(starSpan);
-	colDiv.appendChild(colInput);
-	colDiv.appendChild(colButton);
-	divBox.appendChild(colDiv);	
-	divBox.appendChild(colDivUsers);
+	if(k>0){
+		colDiv.appendChild(colInput);
+		colDiv.appendChild(colButton);
+		divBox.appendChild(colDiv);	
+		divBox.appendChild(colDivUsers);
+	}	
 	divBox.appendChild(editTimeDiv);
 	divBox.appendChild(createTimeDiv);
 	if(k<0){
 		cDiv.appendChild(cUSpan);
 		cDiv.appendChild(cNSpan);
 		divBox.appendChild(cDiv);
+		divBox.appendChild(adminDiv);
 	}
 
 	if(k>0){
@@ -166,16 +195,19 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 	starSpan.setAttribute("id","star"+k);
 	editSpan.setAttribute("id","edit"+k);
 	delSpan.setAttribute("id","del"+k);
-	colDiv.setAttribute("id","colDiv"+k);
-	colInput.setAttribute("id","colInput"+k);
-	colButton.setAttribute("id","colButton"+k);
-	colDivUsers.setAttribute("id","colDivUsers"+k);
+	if(k>0){
+		colDiv.setAttribute("id","colDiv"+k);
+		colInput.setAttribute("id","colInput"+k);
+		colButton.setAttribute("id","colButton"+k);
+		colDivUsers.setAttribute("id","colDivUsers"+k);
+	}	
 	editTimeDiv.setAttribute("id","editTime"+k);
 	createTimeDiv.setAttribute("id","createTime"+k);
 	if(k<0){
 		cDiv.setAttribute("id","cDiv"+k);
 		cUSpan.setAttribute("id","cUSpan"+k);
 		cNSpan.setAttribute("id","cNSpan"+k);
+		adminDiv.setAttribute("id","adminDiv"+k);
 	}
 
 	//Setting classes for elements
@@ -185,9 +217,14 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 	starSpan.setAttribute("class", "fa fa-star fa-2x");
 	editSpan.setAttribute("class", "fa fa-edit fa-2x");
 	delSpan.setAttribute("class", "fa fa-trash-o fa-2x");
-	colDivUsers.setAttribute("class","colDivUsersClass");
+	if(k>0){
+		colDivUsers.setAttribute("class","colDivUsersClass");
+	}
 	editTimeDiv.setAttribute("class", "editTimeClass");
 	createTimeDiv.setAttribute("class", "createTimeClass");
+	if(k<0){
+		adminDiv.setAttribute("class","adminDivClass");
+	}
 
 	//Striking out if the checkbox is checked
 	if(tChecked=="yes"){
@@ -213,14 +250,16 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 	editSpan.setAttribute("onclick","editClick(this)");
 	delSpan.setAttribute("onclick","delClick(this)");
 
-	colButton.setAttribute("onclick","createCollaborators(this)");
-	colInput.setAttribute("placeholder","Username");
+	if(k>0){
+		colButton.setAttribute("onclick","createCollaborators(this)");
+		colInput.setAttribute("placeholder","Username");
 
-	colInput.addEventListener("keyup",function(event){
-		if(event.keyCode==13){//enter keyCode
-			createCollaborators(this);
-		}
-	},false);
+		colInput.addEventListener("keyup",function(event){
+			if(event.keyCode==13){//enter keyCode
+				createCollaborators(this);
+			}
+		},false);
+	}	
 
 	if(k<0){
 		cDiv.setAttribute("style","display:none;");
@@ -281,6 +320,13 @@ function addCollaborators(k,uname){
 
 function collaboratorDelete(del){
 
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  	xmlhttp = new XMLHttpRequest();
+	} 
+	else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 	k=del.getAttribute("id")[0];
 	l=del.getAttribute("id")[9];
 
@@ -301,6 +347,13 @@ function collaboratorDelete(del){
 
 function addCollabsDb(taskNumber,uname){
 
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  	xmlhttp = new XMLHttpRequest();
+	} 
+	else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 	k=taskNumber;
 	var url="tasks.php";
 	var purpose = "addCollabs";
@@ -317,7 +370,14 @@ function addCollabsDb(taskNumber,uname){
 }
 
 function addCollabsDb2(taskNumber,uname){
-
+	
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  	xmlhttp = new XMLHttpRequest();
+	} 
+	else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 	k=taskNumber;
 
 	var url="updateCollabData.php";
@@ -337,7 +397,14 @@ function addCollabsDb2(taskNumber,uname){
 }
 
 function getAdminCollabsData(){
-
+	
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  	xmlhttp = new XMLHttpRequest();
+	} 
+	else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 	var p=0;
 	var q=0;
 	var collabsData;
@@ -362,6 +429,13 @@ function getAdminCollabsData(){
 
 function getOtherCollabsData(){
 
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  	xmlhttp = new XMLHttpRequest();
+	} 
+	else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 	var p=0;
 	var q=0;
 	var collabsData;
@@ -383,7 +457,14 @@ function getOtherCollabsData(){
 }
 
 function getCollabsData(userName,taskNumber){
-	
+
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  	xmlhttp = new XMLHttpRequest();
+	} 
+	else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}	
 	var collabsData;
 	var url="getCollabsData.php";
 	var purpose = "getCollabsData";
@@ -391,48 +472,20 @@ function getCollabsData(userName,taskNumber){
 
 	xmlhttp.onreadystatechange = function(){
 	    if(this.readyState==4&&this.status==200){
-	    	console.log("hey");
 		    	collabsData = JSON.parse(this.responseText);
-		    	console.log(collabsData);
 		    	for(i=0;i<collabsData.length;i++){
 		    		b--;
 		    		permission="others";
 		    		cusername=userName;
 		    		ctasknumber=taskNumber;
-		    		console.log(b);
 		    		createBox(b,collabsData[i].Checked,collabsData[i].TaskText,collabsData[i].Starred,collabsData[i].EditTime,collabsData[i].CreateTime);
 		    	}		
-		    	getCollabsUserData(userName);
 	    }	    				
 	};
 
 	xmlhttp.open('POST',url,true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);		
-
-}
-
-function getCollabsUserData(userName){
-
-	var p=0;
-	var q=0;
-	var collabsData;
-	var userNameGet;
-	var permission = "others";
-	var params = "permission="+permission+"&userName="+userName;
-	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.onreadystatechange = function(){
-	    if(this.readyState==4&&this.status==200){	
-	    	collabsData = JSON.parse(this.responseText);
-	    	for(p=0;p<collabsData.length;p++){
-				userNameGet = collabsData[p].CollabsUsername;
-				addCollaborators(b,userNameGet);
-	    	}
-	    }
-	};
-	xmlhttp.open("POST","getAdminCollabsData.php",true);
-	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-	xmlhttp.send(params);
 
 }
 
@@ -555,6 +608,13 @@ function editClick(edit){//Function that allows user to edit the contents of the
 
 function editTaskDb(k){//Function to update edited task data in database
 
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  	xmlhttp = new XMLHttpRequest();
+	} 
+	else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 	var d = new Date();
 	document.getElementById("editTime"+k).innerHTML ="Edited: "+d;	
 
@@ -587,6 +647,13 @@ function editTaskDb(k){//Function to update edited task data in database
 
 function editTaskDb2(k){//Function to update edited task data in database
 
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  	xmlhttp = new XMLHttpRequest();
+	} 
+	else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 	var d = new Date();
 	document.getElementById("editTime"+k).innerHTML ="Edited: "+d;	
 
@@ -624,18 +691,57 @@ function editTaskDb2(k){//Function to update edited task data in database
 function delClick(del){//Function to delete a task
 
 	k=del.getAttribute("id")[3];
-	if(k=="-"){
-		k="-"+del.getAttribute("id")[4];;
+
+	if(k!="-"){
+
+		var xmlhttp;
+		if (window.XMLHttpRequest) {
+		  	xmlhttp = new XMLHttpRequest();
+		} 
+		else{
+		  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var url="tasks.php";
+		var taskNumber = k;
+		var purpose = "delete";
+		var params = "taskNumber="+taskNumber+"&purpose="+purpose;
+			
+		xmlhttp.open('POST',url,true);
+		xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+		xmlhttp.send(params);
 	}
 
-	var url="tasks.php";
-	var taskNumber = k;
-	var purpose = "delete";
-	var params = "taskNumber="+taskNumber+"&purpose="+purpose;
-		
-	xmlhttp.open('POST',url,true);
-	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-	xmlhttp.send(params);
+	else{
+
+		if(k=="-"){
+			k="-"+del.getAttribute("id")[4];;
+		}
+		console.log("hey");
+		var xmlhttp;
+		if (window.XMLHttpRequest) {
+		  	xmlhttp = new XMLHttpRequest();
+		} 
+		else{
+		  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var url="updateCollabData.php";
+		var taskNumber = k;
+		var purpose = "deleteBox";
+		var un = document.getElementById("cUSpan"+k).innerHTML;
+		var unum = document.getElementById("cNSpan"+k).innerHTML;
+		var params = "un="+un+"&unum="+unum+"&taskNumber="+taskNumber+"&purpose="+purpose;
+
+		xmlhttp.onreadystatechange = function(){
+		    if(this.readyState==4&&this.status==200){	
+		    	console.log(this.responseText);
+		    }
+		};
+			
+		xmlhttp.open('POST',url,true);
+		xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+		xmlhttp.send(params);
+
+	}	
 
 	document.getElementById("taskBox"+k).remove();
 
@@ -669,6 +775,13 @@ function delClick(del){//Function to delete a task
 
 function addTaskDb(taskNumber,checked,taskText,starred,editTime,createTime){//Function to store user's newly created task data in database
 
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  	xmlhttp = new XMLHttpRequest();
+	} 
+	else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 	var url="tasks.php";
 	var purpose = "add";
 	var params = "taskNumber="+taskNumber+"&checked="+checked+"&taskText="+taskText+"&starred="+starred+"&editTime="+editTime+"&createTime="+createTime+"&purpose="+purpose;
@@ -700,8 +813,14 @@ function sortClick(y){
 
 function sortBoxCheck(){
 
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  	xmlhttp = new XMLHttpRequest();
+	} 
+	else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 	var params="";
-	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function(){
 	    if(this.readyState==4&&this.status==200){
 	    	var data = JSON.parse(this.responseText);			
@@ -725,8 +844,14 @@ function sortBoxCheck(){
 
 function sortBoxImp(){
 
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  	xmlhttp = new XMLHttpRequest();
+	} 
+	else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 	var params="";
-	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function(){
 	    if(this.readyState==4&&this.status==200){
 	    	var data = JSON.parse(this.responseText);			
@@ -750,8 +875,14 @@ function sortBoxImp(){
 
 function sortBoxTime(){
 
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  	xmlhttp = new XMLHttpRequest();
+	} 
+	else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 	var params="";
-	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function(){
 	    if(this.readyState==4&&this.status==200){
 	    	var data = JSON.parse(this.responseText);			
