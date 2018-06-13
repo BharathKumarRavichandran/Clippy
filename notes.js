@@ -15,6 +15,7 @@ var labelArrayInit = new Array();
 var labelArray = new Array();
 var imgArray = new Array();
 
+var xmlhttp;
 if (window.XMLHttpRequest) {
   		xmlhttp = new XMLHttpRequest();
 } 
@@ -32,8 +33,14 @@ document.getElementById("notesInput").addEventListener("keyup",function(event){/
 
 function initialise(){//Function to get stored note data in database and to create note boxes
 
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  		xmlhttp = new XMLHttpRequest();
+	} 
+	 else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 	var params="";
-	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function(){
 	    if(this.readyState==4&&this.status==200){
 	    	data = JSON.parse(this.responseText);			
@@ -213,6 +220,13 @@ function starClick(y){
 	var d = new Date();
 	document.getElementById("editTime"+k).innerHTML ="Edited: "+d;	
 
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  		xmlhttp = new XMLHttpRequest();
+	} 
+	 else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 	var url="notes.php";
 	var noteNumber = k;
 	var editTime = document.getElementById("editTime"+k).innerHTML;
@@ -233,11 +247,19 @@ function editClick(edit){//Function that allows user to edit the contents of the
 		document.getElementById("title"+k).setAttribute("contentEditable",true);
 		document.getElementById("noteTextArea"+k).setAttribute("contentEditable",true);
 		document.getElementById("edit"+k).setAttribute("class","fa fa-check-circle fa-2x");
+		document.getElementById("title"+k).style.borderStyle = "dotted";
+		document.getElementById("title"+k).style.borderRadius = "10px";	
+		document.getElementById("title"+k).style.borderColor = "darkred";
+		document.getElementById("noteTextArea"+k).style.borderStyle = "dashed";
+		document.getElementById("noteTextArea"+k).style.borderRadius = "10px";	
+		document.getElementById("noteTextArea"+k).style.borderColor = "darkblue";
 	}
 	else{
 		document.getElementById("title"+k).setAttribute("contentEditable",false);
 		document.getElementById("noteTextArea"+k).setAttribute("contentEditable",false);
 		document.getElementById("edit"+k).setAttribute("class","fa fa-edit fa-2x");
+		document.getElementById("title"+k).style.border = "none";
+		document.getElementById("noteTextArea"+k).style.border = "none";
 		editNoteDb(k);
 	}	
 
@@ -248,6 +270,13 @@ function editNoteDb(k){//Function to update edited note data in database
 	var d = new Date();
 	document.getElementById("editTime"+k).innerHTML ="Edited: "+d;	
 
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  		xmlhttp = new XMLHttpRequest();
+	} 
+	 else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 	var url="notes.php";
 	var noteNumber = k;
 	var titleText = document.getElementById("title"+k).innerHTML;
@@ -282,6 +311,13 @@ function delClick(del){//Function to delete a note
 
 	delete labels[k];
 
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  		xmlhttp = new XMLHttpRequest();
+	} 
+	 else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 	var url="notes.php";
 	var noteNumber = k;
 	var purpose = "delete";
@@ -297,6 +333,13 @@ function delClick(del){//Function to delete a note
 
 function addNoteDb(noteNumber,titleText,noteText,noteStar,editTime,createTime){//Function to store user's newly created note data in database
 
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  		xmlhttp = new XMLHttpRequest();
+	} 
+	 else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 	var url="notes.php";
 	var purpose = "add";
 	var params = "noteNumber="+noteNumber+"&titleText="+titleText+"&noteText="+noteText+"&noteStar="+noteStar+"&editTime="+editTime+"&createTime="+createTime+"&purpose="+purpose;
@@ -375,6 +418,13 @@ function newLabel(y,event,l){
 
 function addLabelDb(k){
 
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  		xmlhttp = new XMLHttpRequest();
+	} 
+	 else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 	var url="notes.php";
 	var purpose = "labelAdd";
 	var label = document.getElementById("labIn"+k).value+" ";
@@ -389,6 +439,13 @@ function addLabelDb(k){
 function labelAlreadyExistsNote(k,text){
 
 	var labelTextArray = new Array();
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  		xmlhttp = new XMLHttpRequest();
+	} 
+	 else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}	
 	var params="";
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function(){
@@ -464,7 +521,13 @@ function labelView(y){
 	var labelLinkText = y.innerHTML;
 	
 	var params="";
-	var xmlhttp = new XMLHttpRequest();
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  		xmlhttp = new XMLHttpRequest();
+	} 
+	 else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 	xmlhttp.onreadystatechange = function(){
 		if(this.readyState==4&&this.status==200){
 		    data = JSON.parse(this.responseText);	
@@ -546,7 +609,13 @@ function sortClick(y){
 function sortBoxImp(){
 
 	var params="";
-	var xmlhttp = new XMLHttpRequest();
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  		xmlhttp = new XMLHttpRequest();
+	} 
+	 else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 	xmlhttp.onreadystatechange = function(){
 	    if(this.readyState==4&&this.status==200){
 	    	var data = JSON.parse(this.responseText);			
@@ -575,7 +644,13 @@ function sortBoxImp(){
 function sortBoxTime(){
 
 	var params="";
-	var xmlhttp = new XMLHttpRequest();
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+	  		xmlhttp = new XMLHttpRequest();
+	} 
+	 else{
+	  	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
 	xmlhttp.onreadystatechange = function(){
 	    if(this.readyState==4&&this.status==200){
 	    	var data = JSON.parse(this.responseText);			

@@ -338,6 +338,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"&&(!isset($_POST['purpose']))){
 			font-size: 1.4em;
 			padding: 10px;
 			padding-bottom: 20px;
+			margin-top: 1.6%;
 		}
 
 		.fa{
