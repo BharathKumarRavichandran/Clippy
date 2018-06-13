@@ -2,6 +2,9 @@ var i=0;
 var k=0;
 var task=0;
 var b=0;
+var permission;
+var cusername="";
+var ctasknumber=0;
 var colArray = new Array();
 
 if (window.XMLHttpRequest) {
@@ -28,6 +31,7 @@ function initialise(){//Function to get stored task data in database and to crea
 	    	var data = JSON.parse(this.responseText);			
 	    	for(i=0;i<data.length;i++){
 	    		task++;
+	    		permission="admin";
 	    		createBox(data[i].TaskNumber,data[i].Checked,data[i].TaskText,data[i].Starred,data[i].EditTime,data[i].CreateTime);
 	    	}
 	    	getAdminCollabsData();
@@ -53,6 +57,7 @@ function newTask(){//Function to collect current task data to call box creating 
 		var starred = "no";
 		var editTime = "Edited: "+d;
 		var createTime = "Created: "+d;
+		permission="admin";
 
 		createBox(taskNumber,checked,taskText,starred,editTime,createTime);
 		
@@ -77,19 +82,36 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 	var starSpan = document.createElement("span");
 	var editSpan = document.createElement("span");
 	var delSpan = document.createElement("span");
-	var colDiv = document.createElement("div");
-	var colInput = document.createElement("input");
-	var colButton = document.createElement("button");
+	var	colDiv = document.createElement("div");
+	var	colInput = document.createElement("input");
+	var	colButton = document.createElement("button");	
 	var colDivUsers = document.createElement("div"); 
 	var editTimeDiv = document.createElement("div");
-	var createTimeDiv = document.createElement("div"); 
+	var createTimeDiv = document.createElement("div");
+
+	var cDiv;
+	var cUSpan;
+	var cNSpan;
+	if(k<0){
+		cDiv = document.createElement("div");
+		cUSpan = document.createElement("span");
+		cNSpan = document.createElement("span");
+	} 
 
 	//create text nodes for the above elements
 	var taskText = document.createTextNode(tText);
-	var btnText = document.createTextNode("Add Collaborators");
+	var	btnText = document.createTextNode("Add Collaborators");	
 	var colDivUsersText = document.createTextNode("Collaborators :");
 	var editTimeText = document.createTextNode(tEditTime);
 	var createTimeText = document.createTextNode(tCreateTime);
+
+	var cDivText;
+	var cUSpanText;
+	var cNSpanText;
+	if(k<0){
+		cUSpanText = document.createTextNode(cusername);
+		cNSpanText = document.createTextNode(ctasknumber);
+	} 
 
 	//Appending textnodes
 	taskSpan.appendChild(taskText);
@@ -97,6 +119,10 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 	colDivUsers.appendChild(colDivUsersText);
 	editTimeDiv.appendChild(editTimeText);
 	createTimeDiv.appendChild(createTimeText);
+	if(k<0){
+		cUSpan.appendChild(cUSpanText);
+		cNSpan.appendChild(cNSpanText);
+	}
 
 	//Appending childnodes
 	checkboxSpan.appendChild(checkbox);
@@ -107,11 +133,22 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 	divBox.appendChild(starSpan);
 	colDiv.appendChild(colInput);
 	colDiv.appendChild(colButton);
-	divBox.appendChild(colDiv);
+	divBox.appendChild(colDiv);	
 	divBox.appendChild(colDivUsers);
 	divBox.appendChild(editTimeDiv);
 	divBox.appendChild(createTimeDiv);
-	document.getElementById("taskRegion").appendChild(divBox);
+	if(k<0){
+		cDiv.appendChild(cUSpan);
+		cDiv.appendChild(cNSpan);
+		divBox.appendChild(cDiv);
+	}
+
+	if(k>0){
+		document.getElementById("taskRegion").appendChild(divBox);
+	}
+	else if(k<0){
+		document.getElementById("taskRegion2").appendChild(divBox);
+	}	
 
 	//Setting id for elements
 	divBox.setAttribute("id","taskBox"+k);
@@ -126,6 +163,11 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 	colDivUsers.setAttribute("id","colDivUsers"+k);
 	editTimeDiv.setAttribute("id","editTime"+k);
 	createTimeDiv.setAttribute("id","createTime"+k);
+	if(k<0){
+		cDiv.setAttribute("id","cDiv"+k);
+		cUSpan.setAttribute("id","cUSpan"+k);
+		cNSpan.setAttribute("id","cNSpan"+k);
+	}
 
 	//Setting classes for elements
 	divBox.setAttribute("class", "taskBoxClass");
@@ -161,8 +203,8 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 	starSpan.setAttribute("onclick","starClick(this)");
 	editSpan.setAttribute("onclick","editClick(this)");
 	delSpan.setAttribute("onclick","delClick(this)");
-	colButton.setAttribute("onclick","createCollaborators(this)");
 
+	colButton.setAttribute("onclick","createCollaborators(this)");
 	colInput.setAttribute("placeholder","Username");
 
 	colInput.addEventListener("keyup",function(event){
@@ -171,23 +213,40 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 		}
 	},false);
 
+	if(k<0){
+		cDiv.setAttribute("style","display:none;");
+	}
+
 }
 
 function createCollaborators(z){
 
 	k=z.getAttribute("id")[8];
+
 	var uname = document.getElementById("colInput"+k).value;
 
-	addCollaborators(k,uname);	
-	addCollabsDb(k,uname);
-
+	if(k!="-"){
+		addCollabsDb(k,uname);
+		addCollaborators(k,uname);	
+	}
+	else{
+		k+=z.getAttribute("id")[9];
+		addCollabsDb2(k,uname);
+		addCollaborators(k,uname);	
+	}
+	
 	document.getElementById("colInput"+k).value="";
 	document.getElementById("colInput"+k).setAttribute("placeholder","Username");
 }
 
 function addCollaborators(k,uname){
 
-	colArray[k]++;
+	if(k<0){
+		colArray[k]--;
+	}
+	else{
+		colArray[k]++;
+	}
 
 	var colSpan = document.createElement("span");	
 	var colNameText = document.createTextNode(uname);
@@ -202,10 +261,35 @@ function addCollaborators(k,uname){
 
 function addCollabsDb(taskNumber,uname){
 
+	k=taskNumber;
 	var url="tasks.php";
 	var purpose = "addCollabs";
-	var params = "taskNumber="+taskNumber+"&uname="+uname+"&purpose="+purpose;
+	var params="";
+	var un;
+	var unum;
 	
+	params = "taskNumber="+taskNumber+"&uname="+uname+"&purpose="+purpose;
+
+	xmlhttp.open('POST',url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
+
+}
+
+function addCollabsDb2(taskNumber,uname){
+
+	k=taskNumber;
+
+	var url="updateCollabData.php";
+	var purpose = "addCollabs";
+	var params="";
+	var un;
+	var unum;
+	
+	un = document.getElementById("cUSpan"+k).innerHTML;
+	unum = document.getElementById("cNSpan"+k).innerHTML;
+	params = "un="+un+"&unum="+unum+"&taskNumber="+taskNumber+"&checked="+checked+"&taskText="+taskText+"&starred="+starred+"&editTime="+editTime+"&purpose="+purpose;
+
 	xmlhttp.open('POST',url,true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);
@@ -267,12 +351,15 @@ function getCollabsData(userName,taskNumber){
 
 	xmlhttp.onreadystatechange = function(){
 	    if(this.readyState==4&&this.status==200){
-	    	collabsData = JSON.parse(this.responseText);
-	    	for(i=0;i<collabsData.length;i++){
-	    		b--;
-	    		createBox(b,collabsData[i].Checked,collabsData[i].TaskText,collabsData[i].Starred,collabsData[i].EditTime,collabsData[i].CreateTime);
-	    	}		
-	    	 getCollabsUserData(userName);
+		    	collabsData = JSON.parse(this.responseText);
+		    	for(i=0;i<collabsData.length;i++){
+		    		b--;
+		    		permission="others";
+		    		cusername=userName;
+		    		ctasknumber=taskNumber;
+		    		createBox(b,collabsData[i].Checked,collabsData[i].TaskText,collabsData[i].Starred,collabsData[i].EditTime,collabsData[i].CreateTime);
+		    	}		
+		    	getCollabsUserData(userName);
 	    }	    				
 	};
 
@@ -310,25 +397,44 @@ function checkboxClick(button){//Function to respond to user's checkbox click
 	
 	k=button.getAttribute("id")[10];
 
-	if(button.checked==true){
-		document.getElementById("taskText"+k).style.textDecoration ="line-through";
-	}
+	if(k!="-"){
 
-	else{
-		document.getElementById("taskText"+k).style.textDecoration ="none";
-	}
-
-	editTaskDb(k);
-
-	if(document.getElementById("selectId").value=="remaining"){
-
-		while(taskRegion.firstChild) { //To remove the childs of tasksRegion
-	    	taskRegion.removeChild(taskRegion.firstChild);
+		if(button.checked==true){
+			document.getElementById("taskText"+k).style.textDecoration ="line-through";
 		}
 
-		sortBoxCheck();
+		else{
+			document.getElementById("taskText"+k).style.textDecoration ="none";
+		}
 
-		document.getElementById("selectId").value = "remaining";
+		editTaskDb(k);
+
+		if(document.getElementById("selectId").value=="remaining"){
+
+			while(taskRegion.firstChild) { //To remove the childs of tasksRegion
+		    	taskRegion.removeChild(taskRegion.firstChild);
+			}
+
+			sortBoxCheck();
+
+			document.getElementById("selectId").value = "remaining";
+		}	
+
+	}
+	
+	else{
+		k="-";
+		k+=button.getAttribute("id")[11];
+
+		if(button.checked==true){
+			document.getElementById("taskText"+k).style.textDecoration ="line-through";
+		}
+
+		else{
+			document.getElementById("taskText"+k).style.textDecoration ="none";
+		}
+
+		editTaskDb2(k);
 	}	
 
 }
@@ -337,33 +443,56 @@ function starClick(taskStar){//Function to respond to user's star click
 
 	k=taskStar.getAttribute("id")[4];
 
-	if(taskStar.classList.contains("checked")){
-		taskStar.classList.remove("checked");
-		document.getElementById("taskBox"+k).style.background = "orange";
-	}
-	else{
-		taskStar.classList.add("checked");
-		document.getElementById("taskBox"+k).style.background = "#01FF70";
-	}
+	if(k!="-"){
 
-	editTaskDb(k);
-
-	if(document.getElementById("selectId").value=="importance"){
-
-		while(taskRegion.firstChild) { //To remove the childs of tasksRegion
-	    	taskRegion.removeChild(taskRegion.firstChild);
+		if(taskStar.classList.contains("checked")){
+			taskStar.classList.remove("checked");
+			document.getElementById("taskBox"+k).style.background = "orange";
+		}
+		else{
+			taskStar.classList.add("checked");
+			document.getElementById("taskBox"+k).style.background = "#01FF70";
 		}
 
-		sortBoxImp();
+		editTaskDb(k);
 
-		document.getElementById("selectId").value = "importance";
+		if(document.getElementById("selectId").value=="importance"){
+
+			while(taskRegion.firstChild) { //To remove the childs of tasksRegion
+		    	taskRegion.removeChild(taskRegion.firstChild);
+			}
+
+			sortBoxImp();
+
+			document.getElementById("selectId").value = "importance";
+		}	
 	}	
+
+	else{
+		k="-";
+		k+=taskStar.getAttribute("id")[5];
+		if(taskStar.classList.contains("checked")){
+			taskStar.classList.remove("checked");
+			document.getElementById("taskBox"+k).style.background = "orange";
+		}
+		else{
+			taskStar.classList.add("checked");
+			document.getElementById("taskBox"+k).style.background = "#01FF70";
+		}
+
+		editTaskDb2(k);
+	}
 }
 
 function editClick(edit){//Function that allows user to edit the contents of the task
 
 	k=edit.getAttribute("id")[4];
+	if(k=="-"){
+		console.log(k);
+		k="-"+edit.getAttribute("id")[5];;
+	}
 
+	console.log(k);
 	if(document.getElementById("edit"+k).getAttribute("class")=="fa fa-edit fa-2x"){
 		document.getElementById("taskText"+k).setAttribute("contentEditable",true);
 		document.getElementById("edit"+k).setAttribute("class","fa fa-check-circle fa-2x");	
@@ -408,9 +537,48 @@ function editTaskDb(k){//Function to update edited task data in database
 
 }
 
+function editTaskDb2(k){//Function to update edited task data in database
+
+	var d = new Date();
+	document.getElementById("editTime"+k).innerHTML ="Edited: "+d;	
+
+	var url="updateCollabData.php";
+	var params="";
+	var taskNumber = k;
+	var checked;
+	if(document.getElementById("taskStatus"+k).checked==true){
+		checked = "yes";
+	}
+	else{
+		checked = "no";
+	}
+	var taskText = document.getElementById("taskText"+k).innerHTML;
+	var starred;
+	if(document.getElementById("star"+k).classList.contains("checked")){
+		starred = "yes";
+	}
+	else{
+		starred = "no";
+	}
+	var editTime = document.getElementById("editTime"+k).innerHTML;
+	var purpose = "edit";
+
+	un = document.getElementById("cUSpan"+k).innerHTML;
+	unum = document.getElementById("cNSpan"+k).innerHTML;
+	params = "un="+un+"&unum="+unum+"&taskNumber="+taskNumber+"&checked="+checked+"&taskText="+taskText+"&starred="+starred+"&editTime="+editTime+"&purpose="+purpose;
+
+	xmlhttp.open('POST',url,true);
+	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xmlhttp.send(params);
+
+}
+
 function delClick(del){//Function to delete a task
 
 	k=del.getAttribute("id")[3];
+	if(k=="-"){
+		k="-"+del.getAttribute("id")[4];;
+	}
 
 	var url="tasks.php";
 	var taskNumber = k;
@@ -465,12 +633,12 @@ function sortBoxCheck(){
 	    	var data = JSON.parse(this.responseText);			
 	    	for(i=0;i<data.length;i++){
 	    		if(data[i].Checked=="no"){
-	    			createBox(data[i].TaskNumber,data[i].Checked,data[i].TaskText,data[i].Starred,data[i].EditTime,data[i].CreateTime);
+	    			createBox(data[i].TaskNumber,data[i].Checked,data[i].TaskText,data[i].Starred,data[i].EditTime,data[i].CreateTime,"admin");
 	    		}
 	    	}
 	    	for(i=0;i<data.length;i++){
 	    		if(data[i].Checked=="yes"){
-	    			createBox(data[i].TaskNumber,data[i].Checked,data[i].TaskText,data[i].Starred,data[i].EditTime,data[i].CreateTime);
+	    			createBox(data[i].TaskNumber,data[i].Checked,data[i].TaskText,data[i].Starred,data[i].EditTime,data[i].CreateTime,"admin");
 	    		}
 	    	}
 	    }
@@ -490,12 +658,12 @@ function sortBoxImp(){
 	    	var data = JSON.parse(this.responseText);			
 	    	for(i=0;i<data.length;i++){
 	    		if(data[i].Starred=="yes"){
-	    			createBox(data[i].TaskNumber,data[i].Checked,data[i].TaskText,data[i].Starred,data[i].EditTime,data[i].CreateTime);
+	    			createBox(data[i].TaskNumber,data[i].Checked,data[i].TaskText,data[i].Starred,data[i].EditTime,data[i].CreateTime,"admin");
 	    		}
 	    	}
 	    	for(i=0;i<data.length;i++){
 	    		if(data[i].Starred=="no"){
-	    			createBox(data[i].TaskNumber,data[i].Checked,data[i].TaskText,data[i].Starred,data[i].EditTime,data[i].CreateTime);
+	    			createBox(data[i].TaskNumber,data[i].Checked,data[i].TaskText,data[i].Starred,data[i].EditTime,data[i].CreateTime,"admin");
 	    		}
 	    	}
 	    }
@@ -514,7 +682,7 @@ function sortBoxTime(){
 	    if(this.readyState==4&&this.status==200){
 	    	var data = JSON.parse(this.responseText);			
 	    	for(i=0;i<data.length;i++){
-	    		createBox(data[i].TaskNumber,data[i].Checked,data[i].TaskText,data[i].Starred,data[i].EditTime,data[i].CreateTime);
+	    		createBox(data[i].TaskNumber,data[i].Checked,data[i].TaskText,data[i].Starred,data[i].EditTime,data[i].CreateTime,"admin");
 	    	}
 	    }
 	};

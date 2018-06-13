@@ -17,52 +17,53 @@ $tablename = $username."tasks";
 
 if($_SERVER['REQUEST_METHOD']=="POST"){
 
-	if($_POST["purpose"]=="add"){
+		if($_POST["purpose"]=="add"){
 
-		$taskNumber = $_POST['taskNumber'];
-		$checked = $_POST['checked'];
-		$taskText = $_POST['taskText'];
-		$starred = $_POST['starred'];
-		$editTime = $_POST['editTime'];
-		$createTime = $_POST['createTime'];
+			$taskNumber = $_POST['taskNumber'];
+			$checked = $_POST['checked'];
+			$taskText = $_POST['taskText'];
+			$starred = $_POST['starred'];
+			$editTime = $_POST['editTime'];
+			$createTime = $_POST['createTime'];
 
-		$sql = "INSERT INTO $tablename(TaskNumber,Checked,TaskText,Starred,EditTime,CreateTime) "."VALUES ('$taskNumber','$checked','$taskText','$starred','$editTime','$createTime');";
-		$conn->query($sql);
+			$sql = "INSERT INTO $tablename(TaskNumber,Checked,TaskText,Starred,EditTime,CreateTime) "."VALUES ('$taskNumber','$checked','$taskText','$starred','$editTime','$createTime');";
+			$conn->query($sql);
 
-	}
+		}
 
-	else if($_POST["purpose"]=="edit"){
+		else if($_POST["purpose"]=="edit"){
 
-		$taskNumber = $_POST['taskNumber'];
-		$checked = $_POST['checked'];
-		$taskText = $_POST['taskText'];
-		$starred = $_POST['starred'];
-		$editTime = $_POST['editTime'];
+			$taskNumber = $_POST['taskNumber'];
+			$checked = $_POST['checked'];
+			$taskText = $_POST['taskText'];
+			$starred = $_POST['starred'];
+			$editTime = $_POST['editTime'];
 
-		$sql = "UPDATE $tablename SET Checked='$checked', TaskText='$taskText', Starred='$starred', EditTime='$editTime' WHERE TaskNumber = $taskNumber;";
-		$conn->query($sql);
+			$sql = "UPDATE $tablename SET Checked='$checked', TaskText='$taskText', Starred='$starred', EditTime='$editTime' WHERE TaskNumber = $taskNumber;";
+			$conn->query($sql);
 
-	}
+		}
 
-	else if($_POST["purpose"]=="delete"){
+		else if($_POST["purpose"]=="delete"){
 
-		$taskNumber = $_POST['taskNumber'];
+			$taskNumber = $_POST['taskNumber'];
 
-		$sql = "DELETE FROM $tablename WHERE TaskNumber = $taskNumber;";
-		$conn->query($sql);
+			$sql = "DELETE FROM $tablename WHERE TaskNumber = $taskNumber;";
+			$conn->query($sql);
 
-	}
+		}
 
-	else if($_POST["purpose"]=="addCollabs"){
+		else if($_POST["purpose"]=="addCollabs"){
 
-		$taskNumber = $_POST['taskNumber'];
-		$uname = $_POST['uname'];
-		
-		$sql = "INSERT INTO Collaborations(username,TaskNumber,CollabsUsername) "."VALUES('$username','$taskNumber','$uname');";
-		$conn->query($sql);
-	}
+			$taskNumber = $_POST['taskNumber'];
+			$uname = $_POST['uname'];
+			
+			$sql = "INSERT INTO Collaborations(username,TaskNumber,CollabsUsername) "."VALUES('$username','$taskNumber','$uname');";
+			$conn->query($sql);
+		}
 
 }
+
 
 ?>
 
@@ -288,6 +289,13 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			padding-top: 0;
 		}
 
+		#colListsName{
+			font-family: "Sofia";
+			font-size: 1.5em;
+			color: yellow;
+			margin-left: 44%;
+		}
+
 		@media screen and (max-height: 450px) {
 		    .sidenav {
 		    	padding-top: 15px;
@@ -323,6 +331,9 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		</select>
 	</div>
 	<div id="taskRegion" class="main taskRegionClass">
+	</div>
+	<div id="colListsName" class="main">Non-Admin Collaborated Lists :</div>
+	<div id="taskRegion2" class="main taskRegionClass2">
 	</div>	
 <script type="text/javascript">
 	window.onscroll = function() {myFunction()};
