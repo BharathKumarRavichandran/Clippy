@@ -218,6 +218,7 @@ function createBox(k,tChecked,tText,tStarred,tEditTime,tCreateTime){//Function t
 	editSpan.setAttribute("class", "fa fa-edit fa-2x");
 	delSpan.setAttribute("class", "fa fa-trash-o fa-2x");
 	if(k>0){
+		colDiv.setAttribute("class","colDivClass");
 		colDivUsers.setAttribute("class","colDivUsersClass");
 	}
 	editTimeDiv.setAttribute("class", "editTimeClass");
@@ -589,11 +590,15 @@ function editClick(edit){//Function that allows user to edit the contents of the
 
 	if(document.getElementById("edit"+k).getAttribute("class")=="fa fa-edit fa-2x"){
 		document.getElementById("taskText"+k).setAttribute("contentEditable",true);
-		document.getElementById("edit"+k).setAttribute("class","fa fa-check-circle fa-2x");	
+		document.getElementById("edit"+k).setAttribute("class","fa fa-check-circle fa-2x");
+		document.getElementById("taskText"+k).style.borderStyle = "dashed";
+		document.getElementById("taskText"+k).style.borderRadius = "10px";	
+		document.getElementById("taskText"+k).style.borderColor = "darkblue";
 	}
 	else{
 		document.getElementById("taskText"+k).setAttribute("contentEditable",false);
 		document.getElementById("edit"+k).setAttribute("class","fa fa-edit fa-2x");
+		document.getElementById("taskText"+k).style.border = "none";
 
 		if(edit.getAttribute("id")[4]!="-"){
 			editTaskDb(k);

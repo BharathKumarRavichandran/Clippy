@@ -231,6 +231,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			font-style: italic;
 			font-size: 2em;
 			padding: 15px;
+			margin-left: 1%;
 		}
 
 		.fa-2x{
@@ -251,6 +252,10 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
 		.checked{
     		color: red;
+		}
+
+		.colDivClass{
+			margin-top: 2.4%;
 		}
 
 		.colDivUsersClass{
