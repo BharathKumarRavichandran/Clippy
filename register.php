@@ -2,15 +2,23 @@
 
 session_start();
 include_once('connect.php');
+include_once("createDb.php");
 $_SESSION['message']="";
 
+$tablename = "user";
+
 if($_SERVER["REQUEST_METHOD"]=="POST"){
+
+    $sql = "USE clippy;";
+    $conn->query($sql);
 
     $_SESSION['message']="";
     $allow=1;
 
+    $username = $conn->real_escape_string($_POST['username']);
     $email = $_POST['email'];
     $email = filter_var($email, FILTER_SANITIZE_EMAIL);
+
     if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
         $_SESSION['message'] = 'Please enter a valid E-Mail address!';
         $allow=0;
@@ -20,6 +28,24 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         $_SESSION['message'] = 'Your username can only contain letters, numbers, underscore, dash, point, no other special characters are allowed!';
         $allow=0;
     }
+
+    $sql = "SELECT * FROM $tablename;";
+    $result = $conn->query($sql);
+
+    if($result->num_rows>0){
+        while($row = $result->fetch_assoc()){
+
+            if($row["username"]==$username){
+                $_SESSION['message'] = 'Username already exists!';
+                $allow=0;
+            }
+
+            if($row["email"]==$email){
+                $_SESSION['message'] = 'E-Mail already exists!';
+                $allow=0;
+            }
+        }
+    }   
 
     if(!preg_match("/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/",$_POST['password'])) {
         $_SESSION['message'] = 'Your password should contain minimum four characters, at least one letter and one number!';
@@ -32,17 +58,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     	//if two passwords are equal to each other
     	if($_POST["password"]==$_POST["confirmpassword"]){
 
-    		//set all the post variables
-    		$username = trim($_POST['username']);
-    		$username = stripslashes($username);
-    		$username = htmlspecialchars($username);
-    		$username = $conn->real_escape_string($username);
-
-            $email = $conn->real_escape_string($_POST['email']);
-
             $password = md5($_POST['password']); //md5 hash password for security
-
-            include("createDb.php");
 
             //set session variables
             $_SESSION['username'] = $username; 
