@@ -6,46 +6,71 @@ $_SESSION['message']="";
 
 if($_SERVER["REQUEST_METHOD"]=="POST"){
 
-	//if two passwords are equal to each other
-	if($_POST["password"]==$_POST["confirmpassword"]){
+    $_SESSION['message']="";
+    $allow=1;
 
-		//set all the post variables
-		$username = trim($_POST['username']);
-		$username = stripslashes($username);
-		$username = htmlspecialchars($username);
-		$username = $conn->real_escape_string($username);
-
-        $email = $conn->real_escape_string($_POST['email']);
-
-        $password = md5($_POST['password']); //md5 hash password for security
-
-        include("createDb.php");
-
-        //set session variables
-        $_SESSION['username'] = $username; 
-        $_SESSION['email'] = $email;
-
-        include("createDataTable.php");
-
-        //insert user data into database
-        $sql = "INSERT INTO user (username,email,password) "."VALUES ('$username','$email','$password')";
-
-        if($conn->query($sql) === true){    
-            $_SESSION['message'] = "Registration succesful! Added $username to the database!";
-            header("location: menu.php");  
-		}
-
-        else{
-           	$_SESSION['message'] = 'User could not be added to the database!';
-        }
-        
-        $conn->close();   
-
-	}
-
-	else{
-        $_SESSION['message'] = 'Two passwords do not match!';
+    $email = $_POST['email'];
+    $email = filter_var($email, FILTER_SANITIZE_EMAIL);
+    if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+        $_SESSION['message'] = 'Please enter a valid E-Mail address!';
+        $allow=0;
     }
+
+    if(!preg_match("/^[a-zA-Z0-9_.-]*$/",$_POST['username'])) {
+        $_SESSION['message'] = 'Your username can only contain letters, numbers, underscore, dash, point, no other special characters are allowed!';
+        $allow=0;
+    }
+
+    if(!preg_match("/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/",$_POST['password'])) {
+        $_SESSION['message'] = 'Your password should contain minimum four characters, at least one letter and one number!';
+        $allow=0;
+    }
+
+
+    if($allow==1){
+
+    	//if two passwords are equal to each other
+    	if($_POST["password"]==$_POST["confirmpassword"]){
+
+    		//set all the post variables
+    		$username = trim($_POST['username']);
+    		$username = stripslashes($username);
+    		$username = htmlspecialchars($username);
+    		$username = $conn->real_escape_string($username);
+
+            $email = $conn->real_escape_string($_POST['email']);
+
+            $password = md5($_POST['password']); //md5 hash password for security
+
+            include("createDb.php");
+
+            //set session variables
+            $_SESSION['username'] = $username; 
+            $_SESSION['email'] = $email;
+
+            include("createDataTable.php");
+
+            //insert user data into database
+            $sql = "INSERT INTO user (username,email,password) "."VALUES ('$username','$email','$password')";
+
+            if($conn->query($sql) === true){    
+                $_SESSION['message'] = "Registration succesful! Added $username to the database!";
+                header("location: menu.php");  
+    		}
+
+            else{
+               	$_SESSION['message'] = 'User could not be added to the database!';
+            }
+            
+            $conn->close();   
+
+    	}
+
+    	else{
+            $_SESSION['message'] = 'Two passwords do not match!';
+        }
+
+    }    
 
 }
 
