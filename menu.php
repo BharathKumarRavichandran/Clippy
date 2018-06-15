@@ -94,6 +94,18 @@ $_SESSION['message']="";
 			transform: scale(1.2);
 		}
 
+		.sessionDisplay{
+			color: orange;
+			font-family: 'Comic Sans MS';
+			letter-spacing: 0.2em;
+			font-size: 1.2em;
+			margin-left: 80%;
+			margin-top: 8%;
+		}
+
+		.userDisplay{
+			margin-bottom: 3%;
+		}
 
 	</style>
 </head>
@@ -102,7 +114,11 @@ $_SESSION['message']="";
 	<div class="tagline"> A web app to store notes and to-do's</div>
 	<span id="noteButtonContainer"><a onclick="notes()">Notes</a></span>
 	<span id="taskButtonContainer"><a onclick="tasks()">to-do lists</a></span>
-	<span id="logoutButtonContainer"><a onclick="logout()">Logout</a></span>
+	<span id="logoutButtonContainer"><a onclick="logout()">Logout</a></span>	
+	<div class="sessionDisplay">
+		<div class="userDisplay"><?php echo "User : ".$_SESSION["username"]; ?></div>
+		<div><?php echo "E-Mail : ".$_SESSION["email"]; ?></div>
+	</div>
 <script src="functions.js"></script>
 </body>
 </html>
