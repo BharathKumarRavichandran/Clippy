@@ -29,6 +29,9 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			$sql = "INSERT INTO $tablename(TaskNumber,Checked,TaskText,Starred,EditTime,CreateTime) "."VALUES ('$taskNumber','$checked','$taskText','$starred','$editTime','$createTime');";
 			$conn->query($sql);
 
+			$sql = "UPDATE user SET taskMaxCount='$taskNumber' WHERE username = '$username';";
+			$conn->query($sql);
+
 		}
 
 		else if($_POST["purpose"]=="edit"){
@@ -337,7 +340,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		<a onclick="home()"><h2 class="title">Clippy</h2></a>
 	</div>
 	<div><?= $_SESSION['message'] ?></div>
-	<div class="sidenav" >
+	<div class="sidenav" id="sidenav">
 		<a class="home sidenavlinks" onclick="home()">Home</a>
 		<a class="sidenavlinks" onclick="notes()">Notes</a>
 		<a class="sidenavlinks active">to-do lists</a>
@@ -363,6 +366,9 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 	<div id="taskRegion2" class="main taskRegionClass2">
 	</div>	
 <script type="text/javascript">
+
+	document.getElementById("sidenav").style.top = document.getElementById("navbar").offsetHeight+"px";
+
 	window.onscroll = function() {myFunction()};
 
 	var navbar = document.getElementById("navbar");
