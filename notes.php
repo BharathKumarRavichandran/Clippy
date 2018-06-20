@@ -442,6 +442,9 @@ if($_SERVER['REQUEST_METHOD']=="POST"&&(!isset($_POST['purpose']))){
 	<div id="notesRegion" class="main notesRegionClass">
 	</div>
 	<script type="text/javascript">
+
+		document.getElementById("sidenav").style.top = document.getElementById("navbar").offsetHeight+"px";
+
 		window.onscroll = function() {myFunction()};
 
 		var navbar = document.getElementById("navbar");
