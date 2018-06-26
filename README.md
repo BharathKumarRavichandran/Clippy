@@ -36,7 +36,7 @@ replace the string "Your-Username" and "Your-Password" with your own username an
 **Photo Uploading Directory**
 
 * Create a folder "uploads" in folder Clippy to upload pictures and photos in notes.
-* All the pictures uploaded will be uploaded in the uploads folder.s
+* All the pictures uploaded will be uploaded in the uploads folders.
 
 ----
 
