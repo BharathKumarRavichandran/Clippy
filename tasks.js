@@ -337,7 +337,11 @@ function collaboratorDelete(del){
 	var un = document.getElementById(k+"collab"+l).textContent;
 	var unum = k;
 	var params = "un="+un+"&unum="+unum+"&taskNumber="+taskNumber+"&purpose="+purpose;	
-
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){
+	    	console.log(this.responseText);
+	    }
+	};
 	xmlhttp.open('POST',url,true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);
@@ -390,7 +394,11 @@ function addCollabsDb2(taskNumber,uname){
 	un = document.getElementById("cUSpan"+k).innerHTML;
 	unum = document.getElementById("cNSpan"+k).innerHTML;
 	params = "un="+un+"&unum="+unum+"&taskNumber="+taskNumber+"&checked="+checked+"&taskText="+taskText+"&starred="+starred+"&editTime="+editTime+"&purpose="+purpose;
-
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){
+	    	console.log(this.responseText);
+	    }
+	};
 	xmlhttp.open('POST',url,true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);
@@ -643,7 +651,7 @@ function editTaskDb(k){//Function to update edited task data in database
 	var editTime = document.getElementById("editTime"+k).innerHTML;
 	var purpose = "edit";
 	var params = "taskNumber="+taskNumber+"&checked="+checked+"&taskText="+taskText+"&starred="+starred+"&editTime="+editTime+"&purpose="+purpose;
-		
+	
 	xmlhttp.open('POST',url,true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);
@@ -686,7 +694,11 @@ function editTaskDb2(k){//Function to update edited task data in database
 	un = document.getElementById("cUSpan"+k).innerHTML;
 	unum = document.getElementById("cNSpan"+k).innerHTML;
 	params = "un="+un+"&unum="+unum+"&taskNumber="+taskNumber+"&checked="+checked+"&taskText="+taskText+"&starred="+starred+"&editTime="+editTime+"&purpose="+purpose;
-
+	xmlhttp.onreadystatechange = function(){
+	    if(this.readyState==4&&this.status==200){
+	    	console.log(this.responseText);
+	    }
+	};
 	xmlhttp.open('POST',url,true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);
@@ -710,7 +722,7 @@ function delClick(del){//Function to delete a task
 		var taskNumber = k;
 		var purpose = "delete";
 		var params = "taskNumber="+taskNumber+"&purpose="+purpose;
-			
+	
 		xmlhttp.open('POST',url,true);
 		xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 		xmlhttp.send(params);
@@ -721,7 +733,6 @@ function delClick(del){//Function to delete a task
 		if(k=="-"){
 			k="-"+del.getAttribute("id")[4];;
 		}
-		console.log("hey");
 		var xmlhttp;
 		if (window.XMLHttpRequest) {
 		  	xmlhttp = new XMLHttpRequest();
@@ -735,13 +746,11 @@ function delClick(del){//Function to delete a task
 		var un = document.getElementById("cUSpan"+k).innerHTML;
 		var unum = document.getElementById("cNSpan"+k).innerHTML;
 		var params = "un="+un+"&unum="+unum+"&taskNumber="+taskNumber+"&purpose="+purpose;
-
 		xmlhttp.onreadystatechange = function(){
 		    if(this.readyState==4&&this.status==200){	
 		    	console.log(this.responseText);
 		    }
 		};
-			
 		xmlhttp.open('POST',url,true);
 		xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 		xmlhttp.send(params);
@@ -790,7 +799,7 @@ function addTaskDb(taskNumber,checked,taskText,starred,editTime,createTime){//Fu
 	var url="tasks.php";
 	var purpose = "add";
 	var params = "taskNumber="+taskNumber+"&checked="+checked+"&taskText="+taskText+"&starred="+starred+"&editTime="+editTime+"&createTime="+createTime+"&purpose="+purpose;
-	
+
 	xmlhttp.open('POST',url,true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);

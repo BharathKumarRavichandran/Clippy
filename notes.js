@@ -232,7 +232,7 @@ function starClick(y){
 	var editTime = document.getElementById("editTime"+k).innerHTML;
 	var purpose = "starEdit";
 	var params = "noteNumber="+noteNumber+"&noteStar="+noteStar+"&editTime="+editTime+"&purpose="+purpose;
-		
+
 	xmlhttp.open('POST',url,true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);
@@ -284,7 +284,7 @@ function editNoteDb(k){//Function to update edited note data in database
 	var editTime = document.getElementById("editTime"+k).innerHTML;
 	var purpose = "edit";
 	var params = "noteNumber="+noteNumber+"&titleText="+titleText+"&noteText="+noteText+"&editTime="+editTime+"&purpose="+purpose;
-		
+	
 	xmlhttp.open('POST',url,true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);
@@ -322,7 +322,7 @@ function delClick(del){//Function to delete a note
 	var noteNumber = k;
 	var purpose = "delete";
 	var params = "noteNumber="+noteNumber+"&purpose="+purpose;
-		
+	
 	xmlhttp.open('POST',url,true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);
@@ -343,7 +343,7 @@ function addNoteDb(noteNumber,titleText,noteText,noteStar,editTime,createTime){/
 	var url="notes.php";
 	var purpose = "add";
 	var params = "noteNumber="+noteNumber+"&titleText="+titleText+"&noteText="+noteText+"&noteStar="+noteStar+"&editTime="+editTime+"&createTime="+createTime+"&purpose="+purpose;
-	
+
 	xmlhttp.open('POST',url,true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);
@@ -429,7 +429,7 @@ function addLabelDb(k){
 	var purpose = "labelAdd";
 	var label = document.getElementById("labIn"+k).value+" ";
 	var params = "noteNumber="+k+"&label="+label+"&purpose="+purpose;
-		
+
 	xmlhttp.open('POST',url,true);
 	xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xmlhttp.send(params);
