@@ -18,8 +18,14 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 		$uname = $_POST['userName'];
 		$tablename = $uname."tasks";
 
-		$sql = "SELECT * FROM $tablename WHERE TaskNumber = $taskNumber;";
-		$result = $conn->query($sql);
+		$stmt = $conn->prepare("SELECT * FROM $tablename WHERE TaskNumber = ?;");
+		if(!$stmt){
+            echo "Error preparing statement ".htmlspecialchars($conn->error);
+        }
+        $stmt->bind_param("i",$taskNumber);
+        $stmt->execute();
+		$result = $stmt->get_result();
+		$stmt->close();	
 
 		if (!$result) {
 	    	trigger_error('Invalid query: ' . $conn->error);

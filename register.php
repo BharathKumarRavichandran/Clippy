@@ -67,9 +67,13 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
             include("createDataTable.php");
 
             //insert user data into database
-            $sql = "INSERT INTO user (username,email,password) "."VALUES ('$username','$email','$password')";
+            $stmt = $conn->prepare("INSERT INTO user (username,email,password) "."VALUES (?,?,?)");
+            if(!$stmt){
+                echo "Error preparing statement ".htmlspecialchars($conn->error);
+            }
+            $stmt->bind_param("sss",$username,$email,$password);
 
-            if($conn->query($sql) === true){    
+            if($stmt->execute() === true){    
                 $_SESSION['message'] = "Registration succesful! Added $username to the database!";
                 header("location: menu.php");  
     		}
@@ -78,6 +82,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
                	$_SESSION['message'] = 'User could not be added to the database!';
             }
             
+            $stmt->close();
             $conn->close();   
 
     	}

@@ -29,8 +29,14 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			$starred = $_POST['starred'];
 			$editTime = $_POST['editTime'];
 
-			$sql = "UPDATE $tablename SET Checked='$checked', TaskText='$taskText', Starred='$starred', EditTime='$editTime' WHERE TaskNumber = $taskNumber;";
-			$result = $conn->query($sql);
+			$stmt = $conn->prepare("UPDATE $tablename SET Checked=?, TaskText=?, Starred=?, EditTime=? WHERE TaskNumber = ?;");
+			if(!$stmt){
+                echo "Error preparing statement ".htmlspecialchars($conn->error);
+            }
+            $stmt->bind_param("ssssi",$checked,$taskText,$starred,$editTime,$taskNumber);
+            $stmt->execute();
+			$result = $stmt->get_result();
+			$stmt->close();
 
 			if (!$result) {
 	    		trigger_error('Invalid query: ' . $conn->error);
@@ -43,8 +49,14 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			$uname = $_POST['un'];
 			$taskNumber = $_POST["unum"];//Note number
 
-			$sql = "DELETE FROM Collaborations WHERE TaskNumber = $taskNumber AND CollabsUsername = '$uname';";
-			$result = $conn->query($sql);
+			$stmt = $conn->prepare("DELETE FROM Collaborations WHERE TaskNumber = ? AND CollabsUsername = ?;");
+			if(!$stmt){
+                echo "Error preparing statement ".htmlspecialchars($conn->error);
+            }
+            $stmt->bind_param("is",$taskNumber,$uname);
+            $stmt->execute();
+			$result = $stmt->get_result();
+			$stmt->close();
 
 			if (!$result) {
 	    		trigger_error('Invalid query: ' . $conn->error);
@@ -57,8 +69,14 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			$uname = $_POST['un'];
 			$taskNumber = $_POST["unum"];//Note number
 
-			$sql = "DELETE FROM Collaborations WHERE TaskNumber = $taskNumber AND username = '$uname';";
-			$result = $conn->query($sql);
+			$stmt = $conn->prepare("DELETE FROM Collaborations WHERE TaskNumber = ? AND username = ?;");
+			if(!$stmt){
+                echo "Error preparing statement ".htmlspecialchars($conn->error);
+            }
+            $stmt->bind_param("is",$taskNumber,$uname);
+            $stmt->execute();
+			$result = $stmt->get_result();
+			$stmt->close();
 
 			if (!$result) {
 	    		trigger_error('Invalid query: ' . $conn->error);
@@ -72,8 +90,14 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 			$taskNumber = $_POST["unum"];//Note number
 			$uname = $_POST['uname'];
 			
-			$sql = "INSERT INTO Collaborations(username,TaskNumber,CollabsUsername) "."VALUES('$username','$taskNumber','$uname');";
-			$result = $conn->query($sql);
+			$stmt = $conn->prepare("INSERT INTO Collaborations(username,TaskNumber,CollabsUsername) "."VALUES(?,?,?);");
+			if(!$stmt){
+                echo "Error preparing statement ".htmlspecialchars($conn->error);
+            }
+            $stmt->bind_param("sis",$username,$taskNumber,$uname);
+            $stmt->execute();
+			$result = $stmt->get_result();
+			$stmt->close();
 
 			if (!$result) {
 	    		trigger_error('Invalid query: ' . $conn->error);

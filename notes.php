@@ -25,8 +25,10 @@ if($_SERVER['REQUEST_METHOD']=="POST"&&isset($_POST['purpose'])){
 		$editTime = $_POST['editTime'];
 		$createTime = $_POST['createTime'];
 
-		$sql = "INSERT INTO $tablename(NoteNumber,Title,NoteText,Starred,EditTime,CreateTime) "."VALUES ('$noteNumber','$titleText','$noteText','$noteStar','$editTime','$createTime');";
-		$conn->query($sql);
+		$stmt = $conn->prepare("INSERT INTO $tablename(NoteNumber,Title,NoteText,Starred,EditTime,CreateTime) "."VALUES (?,?,?,?,?,?);");
+		$stmt->bind_param("isssss",$noteNumber,$titleText,$noteText,$noteStar,$editTime,$createTime);
+		$stmt->execute();
+		$stmt->close();
 
 		$sql = "UPDATE user SET noteMaxCount='$noteNumber' WHERE username = '$username';";
 		$conn->query($sql);
@@ -40,8 +42,10 @@ if($_SERVER['REQUEST_METHOD']=="POST"&&isset($_POST['purpose'])){
 		$noteText = $_POST['noteText'];
 		$editTime = $_POST['editTime'];
 
-		$sql = "UPDATE $tablename SET Title='$titleText', NoteText='$noteText',EditTime='$editTime' WHERE NoteNumber = $noteNumber;";
-		$conn->query($sql);
+		$stmt = $conn->prepare("UPDATE $tablename SET Title=?, NoteText=?,EditTime=? WHERE NoteNumber = ?;");
+		$stmt->bind_param("sssi",$titleText,$noteText,$editTime,$noteNumber);
+		$stmt->execute();
+		$stmt->close();
 
 	}
 
@@ -51,8 +55,10 @@ if($_SERVER['REQUEST_METHOD']=="POST"&&isset($_POST['purpose'])){
 		$noteStar = $_POST['noteStar'];
 		$editTime = $_POST['editTime'];
 
-		$sql = "UPDATE $tablename SET Starred='$noteStar',EditTime='$editTime' WHERE NoteNumber = $noteNumber;";
-		$conn->query($sql);
+		$stmt = $conn->prepare("UPDATE $tablename SET Starred=?,EditTime=? WHERE NoteNumber = ?;");
+		$stmt->bind_param("ssi",$noteStar,$editTime,$noteNumber);
+		$stmt->execute();
+		$stmt->close();
 
 	}
 
@@ -61,8 +67,10 @@ if($_SERVER['REQUEST_METHOD']=="POST"&&isset($_POST['purpose'])){
 		$noteNumber = $_POST['noteNumber'];
 		$label = $_POST['label'];
 		
-		$sql = "UPDATE $tablename SET Labels=concat(Labels,'$label') WHERE NoteNumber = $noteNumber;";
-		$conn->query($sql);
+		$stmt = $conn->prepare("UPDATE $tablename SET Labels=concat(Labels,?) WHERE NoteNumber = ?;");
+		$stmt->bind_param("si",$label,$noteNumber);
+		$stmt->execute();
+		$stmt->close();
 
 	}
 
@@ -70,8 +78,10 @@ if($_SERVER['REQUEST_METHOD']=="POST"&&isset($_POST['purpose'])){
 
 		$noteNumber = $_POST['noteNumber'];
 
-		$sql = "DELETE FROM $tablename WHERE NoteNumber = $noteNumber;";
-		$conn->query($sql);
+		$stmt = $conn->prepare("DELETE FROM $tablename WHERE NoteNumber = ?;");
+		$stmt->bind_param("i",$noteNumber);
+		$stmt->execute();
+		$stmt->close();
 
 	}
 

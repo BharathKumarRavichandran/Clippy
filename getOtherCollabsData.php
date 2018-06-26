@@ -13,8 +13,14 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 	$sql = "USE clippy;";
 	$conn->query($sql);
 	
-	$sql = "SELECT * FROM $tablename WHERE CollabsUsername = '$username';";
-	$result = $conn->query($sql);
+	$stmt = $conn->prepare("SELECT * FROM $tablename WHERE CollabsUsername = ?;");
+	if(!$stmt){
+        echo "Error preparing statement ".htmlspecialchars($conn->error);
+    }
+    $stmt->bind_param("s",$username);
+    $stmt->execute();
+	$result = $stmt->get_result();
+	$stmt->close();
 
 	if (!$result) {
     	trigger_error('Invalid query: ' . $conn->error);
